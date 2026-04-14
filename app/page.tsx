@@ -50,7 +50,26 @@ export default function Home() {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex flex-col">
+      {/* Navigation Bar */}
+      <nav className="w-full bg-white/90 backdrop-blur-sm border-b border-stone-200 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14">
+            <Link href="/" className="text-lg font-semibold text-stone-800 hover:text-red-700 transition-colors">
+              Chinese Name Generator
+            </Link>
+            <Link 
+              href="/about" 
+              className="text-sm font-medium text-stone-600 hover:text-red-700 transition-colors flex items-center gap-1.5"
+            >
+              <Info className="w-4 h-4" />
+              About
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      <div className="flex-1 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       {/* Hero Section */}
       <div className="text-center mb-12">
         <h1 className="text-4xl sm:text-5xl font-bold text-stone-800 mb-4 tracking-tight">
@@ -238,20 +257,11 @@ export default function Home() {
         </div>
       </div>
 
-      {/* About Link */}
-      <div className="mt-8 text-center">
-        <Link href="/about">
-          <Button variant="ghost" className="text-stone-500">
-            <Info className="mr-2 h-4 w-4" />
-            About Chinese Naming
-          </Button>
-        </Link>
-      </div>
-
       {/* Footer */}
       <footer className="mt-8 text-center text-stone-500 text-sm">
         <p>Powered by AI • Crafted with cultural authenticity</p>
       </footer>
+      </div>
     </div>
   );
 }
