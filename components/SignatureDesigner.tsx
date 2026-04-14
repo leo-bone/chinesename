@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Download, Upload, Eraser, Type, Image, PenTool } from "lucide-react";
 import { usePro } from "./ProProvider";
 
-export type SignatureStyle = "cursive" | "formal" | "artistic";
+export type SignatureStyle = "cursive" | "formal" | "artistic1" | "artistic2";
 
 interface SignatureDesignerProps {
   characters: string;
@@ -28,10 +28,15 @@ const SIGNATURE_STYLES: Record<SignatureStyle, { name: string; desc: string; fon
     desc: "端正稳重，商务首选",
     font: "'Noto Serif SC', serif",
   },
-  artistic: {
-    name: "艺术签名",
-    desc: "独特设计，彰显个性",
+  artistic1: {
+    name: "艺术1",
+    desc: "行云流水，飘逸典雅",
     font: "'Ma Shan Zheng', cursive",
+  },
+  artistic2: {
+    name: "艺术2",
+    desc: "豪放洒脱，大气磅礴",
+    font: "'ZCOOL XiaoWei', cursive",
   },
 };
 
@@ -45,7 +50,7 @@ export default function SignatureDesigner({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { proStatus } = usePro();
 
-  const [selectedStyle, setSelectedStyle] = useState<SignatureStyle>("cursive");
+  const [selectedStyle, setSelectedStyle] = useState<SignatureStyle>("artistic1");
   const [customText, setCustomText] = useState("");
   const [uploadedImage, setUploadedImage] = useState<HTMLImageElement | null>(null);
   const [imagePosition, setImagePosition] = useState({ x: 0.7, y: 0.7, scale: 0.3 });
@@ -113,52 +118,85 @@ export default function SignatureDesigner({
       ctx.textBaseline = "middle";
       ctx.fillText(displayText, canvas.width / 2, canvas.height / 2);
 
-    } else if (selectedStyle === "artistic") {
-      // Artistic style - WILD and aggressive
-      // Multiple layers for depth effect
-      ctx.translate(canvas.width / 2 - 30, canvas.height / 2 + 20);
-      ctx.rotate(-0.35);
+    } else if (selectedStyle === "artistic1") {
+      // Artistic 1 - Wang Xizhi style: flowing, elegant, graceful strokes
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2 - 20);
       
-      // Shadow/outline layer for dramatic effect
-      ctx.strokeStyle = "#dc2626";
-      ctx.lineWidth = 2;
-      ctx.font = `bold 90px ${style.font}`;
+      // Soft diagonal rotation
+      ctx.rotate(-0.08);
+      
+      // Elegant ink color
+      ctx.fillStyle = "#1e3a5f";
+      ctx.font = `bold 80px ${style.font}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.strokeText(displayText, 3, 3);
+      ctx.fillText(displayText, 0, 0);
+      ctx.restore();
+
+      // Delicate flowing underline - single elegant stroke
+      ctx.strokeStyle = "#c4a35a";
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2 - 120, canvas.height / 2 + 50);
+      ctx.quadraticCurveTo(canvas.width / 2, canvas.height / 2 + 55, canvas.width / 2 + 120, canvas.height / 2 + 45);
+      ctx.stroke();
+
+      // Small decorative dot
+      ctx.fillStyle = "#c4a35a";
+      ctx.beginPath();
+      ctx.arc(canvas.width / 2 + 140, canvas.height / 2 + 45, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+    } else if (selectedStyle === "artistic2") {
+      // Artistic 2 - Mao Zedong style: wild, bold, powerful strokes
+      ctx.save();
+      ctx.translate(canvas.width / 2 - 40, canvas.height / 2);
       
-      // Main text
+      // Aggressive rotation for wild effect
+      ctx.rotate(-0.4);
+      
+      // Bold black strokes with red outline
+      ctx.strokeStyle = "#dc2626";
+      ctx.lineWidth = 3;
+      ctx.font = `bold 95px ${style.font}`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.strokeText(displayText, 4, 4);
+      
+      // Main powerful text
       ctx.fillStyle = "#0c0a09";
       ctx.fillText(displayText, 0, 0);
       ctx.restore();
 
-      // Second layer - offset for wild effect
+      // Second layer - offset for dramatic effect
       ctx.save();
-      ctx.translate(canvas.width / 2 + 40, canvas.height / 2 - 10);
-      ctx.rotate(0.25);
+      ctx.translate(canvas.width / 2 + 50, canvas.height / 2 - 20);
+      ctx.rotate(0.3);
       ctx.fillStyle = "#78716c";
-      ctx.font = `bold 70px ${style.font}`;
-      ctx.globalAlpha = 0.4;
+      ctx.font = `bold 75px ${style.font}`;
+      ctx.globalAlpha = 0.35;
       ctx.fillText(displayText, 0, 0);
       ctx.restore();
       ctx.globalAlpha = 1;
 
-      // Wild underline strokes
+      // Bold wild underline strokes
       ctx.strokeStyle = "#dc2626";
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 5;
       ctx.lineCap = "round";
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2 - 180, canvas.height / 2 + 70);
-      ctx.quadraticCurveTo(canvas.width / 2 - 50, canvas.height / 2 + 100, canvas.width / 2 + 80, canvas.height / 2 + 60);
-      ctx.quadraticCurveTo(canvas.width / 2 + 150, canvas.height / 2 + 40, canvas.width / 2 + 200, canvas.height / 2 + 80);
+      ctx.moveTo(canvas.width / 2 - 200, canvas.height / 2 + 80);
+      ctx.quadraticCurveTo(canvas.width / 2 - 50, canvas.height / 2 + 110, canvas.width / 2 + 100, canvas.height / 2 + 70);
+      ctx.quadraticCurveTo(canvas.width / 2 + 180, canvas.height / 2 + 40, canvas.width / 2 + 220, canvas.height / 2 + 90);
       ctx.stroke();
 
-      // Additional accent line
+      // Heavy accent underline
       ctx.strokeStyle = "#0c0a09";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2 - 150, canvas.height / 2 + 85);
-      ctx.lineTo(canvas.width / 2 + 180, canvas.height / 2 + 85);
+      ctx.moveTo(canvas.width / 2 - 180, canvas.height / 2 + 95);
+      ctx.lineTo(canvas.width / 2 + 200, canvas.height / 2 + 95);
       ctx.stroke();
     }
 
