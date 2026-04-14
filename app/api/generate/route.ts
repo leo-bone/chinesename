@@ -14,16 +14,19 @@ interface GenerateRequest {
   interests: string;
   profession: string;
   desiredMeaning: string;
+  more?: boolean; // If true, generate 9 names instead of 5
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body: GenerateRequest = await request.json();
-    const { englishName, gender, age, personality, interests, profession, desiredMeaning } = body;
+    const { englishName, gender, age, personality, interests, profession, desiredMeaning, more } = body;
+
+    const count = more ? 9 : 5;
 
     const prompt = `You are an expert in Chinese naming culture with deep knowledge of classical Chinese literature, philosophy, and character meanings.
 
-Create 5 personalized Chinese names for a person with the following profile:
+Create ${count} personalized Chinese names for a person with the following profile:
 - English Name: ${englishName}
 - Gender: ${gender}
 - Age: ${age}
@@ -45,6 +48,7 @@ Requirements:
 - Consider the person's personality traits and desired meaning
 - Include a mix of traditional and modern names
 - Ensure names sound harmonious and have good visual balance
+${more ? '- These are PREMIUM names - make them EXTRAORDINARY and unique!' : ''}
 
 Return ONLY a valid JSON array in this exact format:
 [

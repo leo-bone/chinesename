@@ -37,6 +37,7 @@ export default function ResultPage() {
   const [formData, setFormData] = useState<FormData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRegenerating, setIsRegenerating] = useState(false);
+  const [isGeneratingMore, setIsGeneratingMore] = useState(false);
   const [error, setError] = useState("");
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [selectedNameIndex, setSelectedNameIndex] = useState(0);
@@ -54,14 +55,14 @@ export default function ResultPage() {
     }
   }, []);
 
-  const generateNames = async (data: FormData) => {
+  const generateNames = async (data: FormData, more: boolean = false) => {
     try {
       const response = await fetch("https://api.chinesename.uichain.org/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, more }),
       });
 
       if (!response.ok) {
@@ -75,11 +76,13 @@ export default function ResultPage() {
       setNames(generatedNames);
       setIsLoading(false);
       setIsRegenerating(false);
+      setIsGeneratingMore(false);
     } catch (err) {
       console.error("Error generating names:", err);
       setError("Failed to generate names. Please try again.");
       setIsLoading(false);
       setIsRegenerating(false);
+      setIsGeneratingMore(false);
     }
   };
 
@@ -88,6 +91,12 @@ export default function ResultPage() {
     setIsRegenerating(true);
     setNames([]);
     generateNames(formData);
+  };
+
+  const handleGenerateMoreNames = () => {
+    if (!formData || !proStatus.isPro) return;
+    setIsGeneratingMore(true);
+    generateNames(formData, true);
   };
 
   const handleCopyName = (name: ChineseName, index: number) => {
@@ -162,6 +171,30 @@ export default function ResultPage() {
           <div className="inline-flex items-center gap-2 mt-4 bg-amber-50 text-amber-700 px-4 py-2 rounded-full text-sm font-medium">
             <Crown className="w-4 h-4" />
             Pro Member - All {names.length} names unlocked
+          </div>
+        )}
+        {/* Generate More Names Button (Pro Only) */}
+        {proStatus.isPro && (
+          <div className="mt-6">
+            <Button
+              onClick={handleGenerateMoreNames}
+              disabled={isGeneratingMore}
+              className="bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 text-white shadow-lg"
+              size="lg"
+            >
+              {isGeneratingMore ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Generating Premium Names...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Generate 9 More Premium Names
+                </>
+              )}
+            </Button>
+            <p className="text-xs text-stone-500 mt-2">Unlock even better names with our premium AI</p>
           </div>
         )}
       </div>
