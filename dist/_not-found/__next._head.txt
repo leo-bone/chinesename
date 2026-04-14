@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[76210,["/_next/static/chunks/0_ajyn4u3q8mh.js","/_next/static/chunks/0qkzziaya7t4r.js"],"ViewportBoundary"]
+3:I[76210,["/_next/static/chunks/0_ajyn4u3q8mh.js","/_next/static/chunks/0qkzziaya7t4r.js"],"MetadataBoundary"]
+4:"$Sreact.suspense"
+5:I[95504,["/_next/static/chunks/0_ajyn4u3q8mh.js","/_next/static/chunks/0qkzziaya7t4r.js"],"IconMark"]
+0:{"rsc":["$","$1","h",{"children":[["$","meta",null,{"name":"robots","content":"noindex"}],["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Your Chinese Name - Discover Your Perfect Chinese Name"}],["$","meta","1",{"name":"description","content":"Get a personalized Chinese name based on your personality, interests, and aspirations. Beautiful calligraphy included."}],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.0x3dzn~oxb6tn.ico","sizes":"256x256","type":"image/x-icon"}],["$","$L5","3",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"XhSeOTBCZrnw3pO83jmmq"}

@@ -1,65 +1,247 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Sparkles, Loader2 } from "lucide-react";
+import Link from "next/link";
+
+interface FormData {
+  englishName: string;
+  gender: string;
+  age: number;
+  personality: string;
+  interests: string;
+  profession: string;
+  desiredMeaning: string;
+}
 
 export default function Home() {
+  const [formData, setFormData] = useState<FormData>({
+    englishName: "",
+    gender: "",
+    age: 25,
+    personality: "",
+    interests: "",
+    profession: "",
+    desiredMeaning: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    // Store form data in localStorage for the result page
+    localStorage.setItem("chineseNameForm", JSON.stringify(formData));
+    
+    // Navigate to result page
+    window.location.href = "/result";
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="flex-1 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      {/* Hero Section */}
+      <div className="text-center mb-12">
+        <h1 className="text-4xl sm:text-5xl font-bold text-stone-800 mb-4 tracking-tight">
+          Discover Your
+          <span className="block text-red-700">Chinese Name</span>
+        </h1>
+        <p className="text-lg text-stone-600 max-w-2xl mx-auto">
+          Get a personalized Chinese name that reflects your personality, 
+          aspirations, and cultural essence. Beautiful calligraphy included.
+        </p>
+      </div>
+
+      {/* Form Card */}
+      <Card className="w-full max-w-2xl bg-white/80 backdrop-blur-sm border-stone-200 shadow-xl">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl text-stone-800">Tell Us About Yourself</CardTitle>
+          <CardDescription className="text-stone-500">
+            We&apos;ll create 5-8 personalized Chinese names based on your unique traits
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* English Name */}
+            <div className="space-y-2">
+              <Label htmlFor="englishName" className="text-stone-700">
+                Your English Name <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="englishName"
+                placeholder="e.g., Michael, Sarah"
+                value={formData.englishName}
+                onChange={(e) => setFormData({ ...formData, englishName: e.target.value })}
+                required
+                className="border-stone-300 focus:border-red-700 focus:ring-red-700"
+              />
+            </div>
+
+            {/* Gender & Age Row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="gender" className="text-stone-700">
+                  Gender <span className="text-red-500">*</span>
+                </Label>
+                <Select
+                  value={formData.gender}
+                  onValueChange={(value) => setFormData({ ...formData, gender: value || "" })}
+                  required
+                >
+                  <SelectTrigger className="border-stone-300 focus:border-red-700 focus:ring-red-700">
+                    <SelectValue placeholder="Select gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="neutral">Neutral</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-stone-700">Age: {formData.age}</Label>
+                <Slider
+                  value={[formData.age]}
+                  onValueChange={(value) => setFormData({ ...formData, age: Array.isArray(value) ? value[0] : value })}
+                  min={10}
+                  max={80}
+                  step={1}
+                  className="py-2"
+                />
+              </div>
+            </div>
+
+            {/* Personality */}
+            <div className="space-y-2">
+              <Label htmlFor="personality" className="text-stone-700">
+                How would you describe your personality? <span className="text-red-500">*</span>
+              </Label>
+              <Select
+                value={formData.personality}
+                onValueChange={(value) => setFormData({ ...formData, personality: value || "" })}
+                required
+              >
+                <SelectTrigger className="border-stone-300 focus:border-red-700 focus:ring-red-700">
+                  <SelectValue placeholder="Select your personality type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ambitious-driven">Ambitious & Driven</SelectItem>
+                  <SelectItem value="calm-peaceful">Calm & Peaceful</SelectItem>
+                  <SelectItem value="creative-artistic">Creative & Artistic</SelectItem>
+                  <SelectItem value="wise-thoughtful">Wise & Thoughtful</SelectItem>
+                  <SelectItem value="energetic-outgoing">Energetic & Outgoing</SelectItem>
+                  <SelectItem value="gentle-kind">Gentle & Kind</SelectItem>
+                  <SelectItem value="strong-resilient">Strong & Resilient</SelectItem>
+                  <SelectItem value="curious-intellectual">Curious & Intellectual</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Interests */}
+            <div className="space-y-2">
+              <Label htmlFor="interests" className="text-stone-700">
+                What are your main interests or hobbies?
+              </Label>
+              <Input
+                id="interests"
+                placeholder="e.g., hiking, reading, martial arts, tea ceremony, music..."
+                value={formData.interests}
+                onChange={(e) => setFormData({ ...formData, interests: e.target.value })}
+                className="border-stone-300 focus:border-red-700 focus:ring-red-700"
+              />
+            </div>
+
+            {/* Profession */}
+            <div className="space-y-2">
+              <Label htmlFor="profession" className="text-stone-700">
+                What is your profession or field of study?
+              </Label>
+              <Input
+                id="profession"
+                placeholder="e.g., software engineer, teacher, artist, student..."
+                value={formData.profession}
+                onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
+                className="border-stone-300 focus:border-red-700 focus:ring-red-700"
+              />
+            </div>
+
+            {/* Desired Meaning */}
+            <div className="space-y-2">
+              <Label htmlFor="desiredMeaning" className="text-stone-700">
+                What qualities or meanings would you like your name to convey?
+              </Label>
+              <Input
+                id="desiredMeaning"
+                placeholder="e.g., wisdom, strength, harmony, success, beauty..."
+                value={formData.desiredMeaning}
+                onChange={(e) => setFormData({ ...formData, desiredMeaning: e.target.value })}
+                className="border-stone-300 focus:border-red-700 focus:ring-red-700"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-red-800 hover:bg-red-900 text-white py-6 text-lg font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Creating Your Names...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Generate My Chinese Names
+                </>
+              )}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      {/* Features */}
+      <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl">
+        <div className="text-center">
+          <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">🎨</span>
+          </div>
+          <h3 className="font-semibold text-stone-800 mb-2">Beautiful Calligraphy</h3>
+          <p className="text-stone-600 text-sm">Each name comes with elegant Chinese calligraphy visualization</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="text-center">
+          <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">📖</span>
+          </div>
+          <h3 className="font-semibold text-stone-800 mb-2">Deep Meaning</h3>
+          <p className="text-stone-600 text-sm">Detailed explanation of each character&apos;s meaning and cultural significance</p>
         </div>
-      </main>
+        <div className="text-center">
+          <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">✨</span>
+          </div>
+          <h3 className="font-semibold text-stone-800 mb-2">Personalized</h3>
+          <p className="text-stone-600 text-sm">Names tailored to your personality, interests, and aspirations</p>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="mt-16 text-center text-stone-500 text-sm">
+        <p>Powered by AI • Crafted with cultural authenticity</p>
+      </footer>
     </div>
   );
 }
