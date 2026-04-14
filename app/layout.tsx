@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import "./globals.css";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "Chinese Name Generator - Discover Your Perfect Chinese Name",
@@ -37,7 +38,7 @@ export default function RootLayout({
       className="h-full antialiased font-sans"
     >
       <body className="min-h-full flex flex-col bg-gradient-to-br from-stone-50 via-amber-50/30 to-stone-100">
-        {children}
+        <Providers>{children}</Providers>
         <Toaster position="bottom-center" />
       </body>
     </html>
