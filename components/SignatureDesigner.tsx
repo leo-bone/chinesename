@@ -106,36 +106,59 @@ export default function SignatureDesigner({
       ctx.stroke();
 
     } else if (selectedStyle === "formal") {
-      // Formal style - clean and centered
+      // Formal style - clean and centered, NO pinyin
       ctx.fillStyle = "#1c1917";
       ctx.font = `bold 64px ${style.font}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(displayText, canvas.width / 2, canvas.height / 2 - 20);
-
-      // Pinyin below
-      ctx.fillStyle = "#57534e";
-      ctx.font = "28px 'Noto Sans SC', sans-serif";
-      ctx.fillText(pinyin, canvas.width / 2, canvas.height / 2 + 40);
+      ctx.fillText(displayText, canvas.width / 2, canvas.height / 2);
 
     } else if (selectedStyle === "artistic") {
-      // Artistic style - diagonal with emphasis
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(-0.15);
+      // Artistic style - WILD and aggressive
+      // Multiple layers for depth effect
+      ctx.translate(canvas.width / 2 - 30, canvas.height / 2 + 20);
+      ctx.rotate(-0.35);
       
-      ctx.fillStyle = "#1c1917";
-      ctx.font = `bold 80px ${style.font}`;
+      // Shadow/outline layer for dramatic effect
+      ctx.strokeStyle = "#dc2626";
+      ctx.lineWidth = 2;
+      ctx.font = `bold 90px ${style.font}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+      ctx.strokeText(displayText, 3, 3);
+      
+      // Main text
+      ctx.fillStyle = "#0c0a09";
       ctx.fillText(displayText, 0, 0);
       ctx.restore();
 
-      // Artistic underline
+      // Second layer - offset for wild effect
+      ctx.save();
+      ctx.translate(canvas.width / 2 + 40, canvas.height / 2 - 10);
+      ctx.rotate(0.25);
+      ctx.fillStyle = "#78716c";
+      ctx.font = `bold 70px ${style.font}`;
+      ctx.globalAlpha = 0.4;
+      ctx.fillText(displayText, 0, 0);
+      ctx.restore();
+      ctx.globalAlpha = 1;
+
+      // Wild underline strokes
       ctx.strokeStyle = "#dc2626";
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
+      ctx.lineCap = "round";
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2 - 150, canvas.height / 2 + 60);
-      ctx.quadraticCurveTo(canvas.width / 2, canvas.height / 2 + 80, canvas.width / 2 + 150, canvas.height / 2 + 50);
+      ctx.moveTo(canvas.width / 2 - 180, canvas.height / 2 + 70);
+      ctx.quadraticCurveTo(canvas.width / 2 - 50, canvas.height / 2 + 100, canvas.width / 2 + 80, canvas.height / 2 + 60);
+      ctx.quadraticCurveTo(canvas.width / 2 + 150, canvas.height / 2 + 40, canvas.width / 2 + 200, canvas.height / 2 + 80);
+      ctx.stroke();
+
+      // Additional accent line
+      ctx.strokeStyle = "#0c0a09";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2 - 150, canvas.height / 2 + 85);
+      ctx.lineTo(canvas.width / 2 + 180, canvas.height / 2 + 85);
       ctx.stroke();
     }
 
