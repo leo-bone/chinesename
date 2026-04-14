@@ -1,0 +1,9 @@
+name = "chinesename"
+main = "worker.js"
+compatibility_date = "2024-04-14"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+# Secrets (需要在 Cloudflare dashboard 手动设置)
+# DEEPSEEK_API_KEY
