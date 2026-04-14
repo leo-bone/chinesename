@@ -1,9 +1,8 @@
 name = "chinesename"
 main = "worker.js"
-compatibility_date = "2024-04-14"
+compatibility_date = "2024-01-01"
 
 [env.production]
-vars = { ENVIRONMENT = "production" }
+name = "chinesename"
 
-# Secrets (需要在 Cloudflare dashboard 手动设置)
-# DEEPSEEK_API_KEY
+# Secrets should be set via wrangler secret put DEEPSEEK_API_KEY

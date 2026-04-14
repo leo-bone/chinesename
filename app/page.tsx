@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, Info } from "lucide-react";
 import Link from "next/link";
 
 interface FormData {
@@ -238,8 +238,18 @@ export default function Home() {
         </div>
       </div>
 
+      {/* About Link */}
+      <div className="mt-8 text-center">
+        <Link href="/about">
+          <Button variant="ghost" className="text-stone-500">
+            <Info className="mr-2 h-4 w-4" />
+            About Chinese Naming
+          </Button>
+        </Link>
+      </div>
+
       {/* Footer */}
-      <footer className="mt-16 text-center text-stone-500 text-sm">
+      <footer className="mt-8 text-center text-stone-500 text-sm">
         <p>Powered by AI • Crafted with cultural authenticity</p>
       </footer>
     </div>
