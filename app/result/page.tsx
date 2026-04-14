@@ -122,8 +122,8 @@ export default function ResultPage() {
 
   const generateNames = async (data: FormData) => {
     try {
-      // Call DeepSeek API to generate names
-      const response = await fetch("/api/generate", {
+      // Call Cloudflare Worker API to generate names
+      const response = await fetch("https://api.chinesename.uichain.org/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
