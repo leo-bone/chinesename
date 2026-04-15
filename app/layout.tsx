@@ -3,8 +3,8 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import Providers from "./providers";
 
-// Google Fonts for calligraphy styles
-const fontFamilies = "family=Ma+Shan+Zheng|ZCOOL+XiaoWei:wght@400";
+// Google Fonts for calligraphy styles - using Noto Serif SC as base
+const fontFamilies = "family=Noto+Serif+SC:wght@400;700&display=swap";
 
 export const metadata: Metadata = {
   title: "Chinese Name Generator - Discover Your Perfect Chinese Name",

@@ -303,7 +303,7 @@ export default function ResultPage() {
         <Tabs defaultValue="names" className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="names" className="text-sm sm:text-base">
-              <span className="hidden sm:inline">Names ({displayNames.length})</span>
+              <span className="hidden sm:inline">Names 名字 ({displayNames.length})</span>
               <span className="sm:hidden">名字 ({displayNames.length})</span>
             </TabsTrigger>
             <TabsTrigger value="calligraphy" className="text-sm sm:text-base">
@@ -448,27 +448,27 @@ export default function ResultPage() {
                 <div className="space-y-3 text-sm text-stone-700 mb-6">
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-green-100 rounded text-green-700 text-center text-xs font-bold">1</span>
-                    <span>楷书 Kaishu · 端正秀丽 Classic</span>
+                    <span>仿宋 FangSong · 清秀雅致 Elegant</span>
                     <span className="text-green-600 text-xs ml-auto">Free 免费</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">2</span>
-                    <span>行书 Xingshu · 流畅飘逸 Flowing</span>
+                    <span>楷体 KaiTi · 端正规范 Standard</span>
                     {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">3</span>
-                    <span>草书 Caoshu · 豪放洒脱 Bold</span>
+                    <span>隶书 LiShu · 古朴典雅 Ancient</span>
                     {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">4</span>
-                    <span>隶书 Lishu · 古朴典雅 Ancient</span>
+                    <span>圆体 Rounded · 圆润可爱 Friendly</span>
                     {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">5</span>
-                    <span>篆书 Xuanshu · 圆润匀齐 Rounded</span>
+                    <span>黑体 HeiTi · 醒目有力 Bold</span>
                     {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                 </div>
