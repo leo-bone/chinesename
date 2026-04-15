@@ -119,103 +119,91 @@ export default function SignatureDesigner({
       ctx.fillText(displayText, canvas.width / 2, canvas.height / 2);
 
     } else if (selectedStyle === "artistic1") {
-      // 王羲之风格 - 真正的行书效果：飘逸流畅、笔势连贯、行云流水
+      // 王羲之风格 - 行书：飘逸流畅、笔势连贯、行云流水
       ctx.save();
       
-      // 绘制背景宣纸纹理
+      // 宣纸背景
       ctx.fillStyle = "#faf8f5";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // 添加细微纹理
-      for (let i = 0; i < 500; i++) {
-        ctx.fillStyle = `rgba(139, 125, 107, ${Math.random() * 0.03})`;
+      // 纹理
+      for (let i = 0; i < 300; i++) {
+        ctx.fillStyle = `rgba(139, 125, 107, ${Math.random() * 0.02})`;
         ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
       }
       
       const chars = displayText.split('');
-      const startX = canvas.width / 2 - (chars.length * 70) / 2;
+      const startX = canvas.width / 2 - (chars.length * 80) / 2;
       
+      // 绘制每个字 - 行书连笔效果
       chars.forEach((char, i) => {
         ctx.save();
-        const x = startX + i * 75 + 35;
-        const y = canvas.height / 2 - 10 + Math.sin(i * 0.5) * 8;
+        const x = startX + i * 85 + 40;
+        const y = canvas.height / 2 - 15 + Math.sin(i * 0.6) * 12;
         
-        // 每个字略微不同的倾斜，模拟行书连贯感
-        const rotation = -0.08 + i * 0.02 + Math.sin(i) * 0.03;
+        // 轻微倾斜，连贯感
+        const rotation = -0.06 + i * 0.015;
         ctx.translate(x, y);
         ctx.rotate(rotation);
         
-        // 绘制毛笔笔触效果 - 多层叠加创造飞白感
-        const gradient = ctx.createRadialGradient(-5, -5, 0, 0, 0, 50);
-        gradient.addColorStop(0, "#0d1b2a");
-        gradient.addColorStop(0.7, "#1b263b");
-        gradient.addColorStop(1, "#415a77");
-        
-        // 外层淡墨晕染
-        ctx.fillStyle = "rgba(27, 38, 59, 0.3)";
-        ctx.font = "bold 95px 'KaiTi', 'STKaiti', serif";
+        // 行书笔触 - 浓淡变化
+        // 外晕
+        ctx.fillStyle = "rgba(30, 40, 60, 0.2)";
+        ctx.font = "bold 100px 'KaiTi', 'STKaiti', '楷体', serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(char, 3, 3);
+        ctx.fillText(char, 2, 2);
         
-        // 中层浓墨
-        ctx.fillStyle = "rgba(13, 27, 42, 0.7)";
-        ctx.fillText(char, 1, 1);
-        
-        // 主笔触 - 深黑带蓝调
-        ctx.fillStyle = gradient;
+        // 主笔 - 墨黑
+        ctx.fillStyle = "#1a1a2e";
+        ctx.font = "bold 100px 'KaiTi', 'STKaiti', '楷体', serif";
         ctx.fillText(char, 0, 0);
         
-        // 飞白效果 - 模拟毛笔干墨
-        ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
-        ctx.font = "bold 95px 'KaiTi', serif";
-        ctx.fillText(char, -2, -2);
+        // 飞白
+        ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
+        ctx.fillText(char, -1, -2);
         
         ctx.restore();
+        
+        // 连笔游丝 - 字间连贯
+        if (i < chars.length - 1) {
+          ctx.strokeStyle = "rgba(26, 26, 46, 0.25)";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          const startX_pos = x + 35;
+          const endX_pos = startX + (i + 1) * 85 + 5;
+          ctx.moveTo(startX_pos, y + Math.random() * 20 - 10);
+          ctx.quadraticCurveTo(
+            (startX_pos + endX_pos) / 2, 
+            y + 25 + Math.sin(i) * 15,
+            endX_pos, 
+            canvas.height / 2 - 15 + Math.sin((i + 1) * 0.6) * 12
+          );
+          ctx.stroke();
+        }
       });
       
-      // 绘制连贯的笔势流动线
-      ctx.strokeStyle = "rgba(139, 69, 19, 0.15)";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([5, 10]);
-      ctx.beginPath();
-      ctx.moveTo(startX - 20, canvas.height / 2 + 20);
-      for (let i = 0; i <= chars.length; i++) {
-        ctx.quadraticCurveTo(
-          startX + i * 75, canvas.height / 2 + 25 + Math.sin(i) * 10,
-          startX + i * 75 + 35, canvas.height / 2 + 20
-        );
-      }
-      ctx.stroke();
-      ctx.setLineDash([]);
-      
-      // 优雅的落款线
-      ctx.strokeStyle = "#8b6914";
+      // 落款线 - 流畅
+      ctx.strokeStyle = "#8b7355";
       ctx.lineWidth = 2.5;
       ctx.lineCap = "round";
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2 - 120, canvas.height / 2 + 70);
-      ctx.quadraticCurveTo(canvas.width / 2 - 30, canvas.height / 2 + 80, canvas.width / 2 + 30, canvas.height / 2 + 72);
-      ctx.quadraticCurveTo(canvas.width / 2 + 90, canvas.height / 2 + 65, canvas.width / 2 + 150, canvas.height / 2 + 75);
+      ctx.moveTo(canvas.width / 2 - 130, canvas.height / 2 + 65);
+      ctx.quadraticCurveTo(canvas.width / 2 - 40, canvas.height / 2 + 75, canvas.width / 2 + 40, canvas.height / 2 + 68);
+      ctx.quadraticCurveTo(canvas.width / 2 + 100, canvas.height / 2 + 60, canvas.width / 2 + 160, canvas.height / 2 + 72);
       ctx.stroke();
       
-      // 印章 - 古朴红色
+      // 印章
       ctx.save();
-      ctx.translate(canvas.width / 2 + 170, canvas.height / 2 + 65);
-      ctx.rotate(0.05);
-      
-      // 印章边框
+      ctx.translate(canvas.width / 2 + 185, canvas.height / 2 + 62);
+      ctx.rotate(0.08);
       ctx.strokeStyle = "#c41e3a";
       ctx.lineWidth = 2;
-      ctx.strokeRect(-18, -18, 36, 36);
-      
-      // 印章底色
-      ctx.fillStyle = "rgba(196, 30, 58, 0.2)";
-      ctx.fillRect(-15, -15, 30, 30);
-      
-      // 印文
+      ctx.strokeRect(-16, -16, 32, 32);
+      ctx.fillStyle = "rgba(196, 30, 58, 0.15)";
+      ctx.fillRect(-13, -13, 26, 26);
       ctx.fillStyle = "#c41e3a";
-      ctx.font = "bold 14px serif";
+      ctx.font = "bold 12px serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("书", 0, 0);
@@ -224,126 +212,104 @@ export default function SignatureDesigner({
       ctx.restore();
 
     } else if (selectedStyle === "artistic2") {
-      // 毛泽东风格 - 真正的毛体效果：豪放磅礴、龙飞凤舞、气吞山河
+      // 毛泽东风格 - 狂草：豪放磅礴、龙飞凤舞
       ctx.save();
       
-      // 绘制背景 - 米黄色宣纸
+      // 米黄宣纸
       ctx.fillStyle = "#f5f0e6";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // 添加岁月痕迹纹理
-      for (let i = 0; i < 300; i++) {
-        ctx.fillStyle = `rgba(139, 90, 43, ${Math.random() * 0.02})`;
-        ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 3, 1);
+      // 岁月痕迹
+      for (let i = 0; i < 200; i++) {
+        ctx.fillStyle = `rgba(139, 90, 43, ${Math.random() * 0.015})`;
+        ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 4, 1);
       }
       
       const chars = displayText.split('');
       
-      // 整体大幅倾斜 - 毛体特征
+      // 整体左倾 - 毛体特征
       ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(-0.18);
+      ctx.rotate(-0.22);
       ctx.translate(-canvas.width / 2, -canvas.height / 2);
       
       chars.forEach((char, i) => {
         ctx.save();
         
-        // 大幅波动的位置 - 龙飞凤舞
-        const x = canvas.width / 2 - 100 + i * 110;
-        const y = canvas.height / 2 + Math.sin(i * 1.2) * 40 - 20;
+        // 大幅波动
+        const x = canvas.width / 2 - 120 + i * 130;
+        const y = canvas.height / 2 + Math.sin(i * 1.5) * 50 - 30;
         
-        // 每个字大幅旋转，形成奔放感
-        const charRotation = -0.3 + i * 0.15 + Math.cos(i) * 0.2;
+        // 大幅旋转
+        const charRotation = -0.35 + i * 0.2 + Math.cos(i) * 0.25;
         
         ctx.translate(x, y);
         ctx.rotate(charRotation);
         
-        // 缩放变化 - 有张有弛
-        const scale = 1 + Math.sin(i * 0.8) * 0.15;
+        // 大小变化
+        const scale = 1.1 + Math.sin(i * 0.9) * 0.2;
         ctx.scale(scale, scale);
         
-        // 绘制多层创造泼墨效果
-        
-        // 1. 底层泼墨晕染 - 最大最淡
-        ctx.fillStyle = "rgba(60, 20, 10, 0.15)";
-        ctx.font = "900 140px 'KaiTi', 'STKaiti', serif";
+        // 泼墨效果 - 多层
+        ctx.fillStyle = "rgba(40, 10, 5, 0.12)";
+        ctx.font = "900 160px 'KaiTi', 'STKaiti', '楷体', serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(char, 8, 8);
+        ctx.fillText(char, 10, 10);
         
-        // 2. 中层浓墨扩散
-        ctx.fillStyle = "rgba(40, 15, 5, 0.4)";
-        ctx.font = "900 130px 'KaiTi', serif";
-        ctx.fillText(char, 4, 4);
+        ctx.fillStyle = "rgba(30, 8, 4, 0.25)";
+        ctx.font = "900 145px 'KaiTi', serif";
+        ctx.fillText(char, 5, 5);
         
-        // 3. 主笔触 - 深黑带红调
-        const mainGradient = ctx.createRadialGradient(-8, -8, 0, 0, 0, 70);
-        mainGradient.addColorStop(0, "#1a0505");
-        mainGradient.addColorStop(0.6, "#2d0a0a");
-        mainGradient.addColorStop(1, "#4a1515");
-        
-        ctx.fillStyle = mainGradient;
-        ctx.font = "900 120px 'KaiTi', serif";
+        // 主笔 - 浓墨
+        ctx.fillStyle = "#0f0505";
+        ctx.font = "900 135px 'KaiTi', serif";
         ctx.fillText(char, 0, 0);
         
-        // 4. 高光飞白 - 模拟干笔
-        ctx.fillStyle = "rgba(200, 180, 160, 0.2)";
-        ctx.font = "900 120px 'KaiTi', serif";
-        ctx.fillText(char, -5, -5);
-        
-        // 5. 红色点缀 - 毛体特征
-        ctx.fillStyle = "rgba(180, 30, 30, 0.3)";
-        ctx.font = "900 120px 'KaiTi', serif";
-        ctx.fillText(char, 2, 0);
+        // 红色点缀
+        ctx.fillStyle = "rgba(160, 20, 20, 0.4)";
+        ctx.fillText(char, 1, 0);
         
         ctx.restore();
       });
       
-      ctx.restore(); // 恢复整体旋转
+      ctx.restore();
       
-      // 绘制狂草风格的波浪下划线
+      // 狂草下划线 - 大幅波浪
       ctx.save();
       ctx.strokeStyle = "#8b0000";
-      ctx.lineWidth = 5;
+      ctx.lineWidth = 6;
       ctx.lineCap = "round";
-      ctx.lineJoin = "round";
       
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2 - 250, canvas.height / 2 + 100);
+      ctx.moveTo(canvas.width / 2 - 280, canvas.height / 2 + 110);
       
-      // 大幅波动的曲线
-      for (let i = 0; i <= 10; i++) {
-        const x = canvas.width / 2 - 250 + i * 50;
-        const y = canvas.height / 2 + 100 + Math.sin(i * 0.8) * 30 + i * 3;
+      for (let i = 0; i <= 12; i++) {
+        const x = canvas.width / 2 - 280 + i * 45;
+        const y = canvas.height / 2 + 110 + Math.sin(i * 0.9) * 40 + i * 2;
         ctx.lineTo(x, y);
       }
       ctx.stroke();
       
-      // 加粗强调部分
+      // 加粗强调
       ctx.strokeStyle = "#4a0000";
-      ctx.lineWidth = 8;
+      ctx.lineWidth = 10;
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2 - 100, canvas.height / 2 + 115);
-      ctx.quadraticCurveTo(canvas.width / 2, canvas.height / 2 + 140, canvas.width / 2 + 100, canvas.height / 2 + 110);
+      ctx.moveTo(canvas.width / 2 - 120, canvas.height / 2 + 130);
+      ctx.quadraticCurveTo(canvas.width / 2 + 20, canvas.height / 2 + 170, canvas.width / 2 + 140, canvas.height / 2 + 120);
       ctx.stroke();
       ctx.restore();
       
-      // 毛泽东风格印章 - 大而醒目
+      // 大印章
       ctx.save();
-      ctx.translate(canvas.width / 2 + 220, canvas.height / 2 + 90);
-      ctx.rotate(-0.1);
-      
-      // 印章外框
+      ctx.translate(canvas.width / 2 + 240, canvas.height / 2 + 110);
+      ctx.rotate(-0.15);
       ctx.strokeStyle = "#b22222";
-      ctx.lineWidth = 3;
-      ctx.strokeRect(-25, -25, 50, 50);
-      
-      // 印章填充
-      ctx.fillStyle = "rgba(178, 34, 34, 0.25)";
-      ctx.fillRect(-22, -22, 44, 44);
-      
-      // 印文 - 毛
+      ctx.lineWidth = 4;
+      ctx.strokeRect(-28, -28, 56, 56);
+      ctx.fillStyle = "rgba(178, 34, 34, 0.2)";
+      ctx.fillRect(-24, -24, 48, 48);
       ctx.fillStyle = "#8b0000";
-      ctx.font = "bold 22px serif";
+      ctx.font = "bold 24px serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("毛", 0, 0);
