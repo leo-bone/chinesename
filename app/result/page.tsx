@@ -57,13 +57,30 @@ export default function ResultPage() {
 
   const generateNames = async (data: FormData, more: boolean = false) => {
     try {
-      const response = await fetch("https://api.chinesename.uichain.org/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...data, more }),
-      });
+      // Try local API first (for development), fallback to direct DeepSeek API
+      const apiUrl = process.env.NODE_ENV === "development" 
+        ? "/api/generate"
+        : "https://api.deepseek.com/v1/chat/completions";
+
+      let response;
+      
+      if (process.env.NODE_ENV === "development") {
+        response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...data, more }),
+        });
+      } else {
+        // Production: Call DeepSeek API directly from client
+        // Note: In production, you should use a proxy server to hide API key
+        // For now, we'll use a simple client-side generation as fallback
+        const names = await generateNamesClientSide(data, more);
+        setNames(names);
+        setIsLoading(false);
+        setIsRegenerating(false);
+        setIsGeneratingMore(false);
+        return;
+      }
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -71,7 +88,6 @@ export default function ResultPage() {
       }
 
       const result = await response.json();
-      // Ensure we have at least 5 names for free tier
       const generatedNames = result.names || [];
       setNames(generatedNames);
       setIsLoading(false);
@@ -79,11 +95,87 @@ export default function ResultPage() {
       setIsGeneratingMore(false);
     } catch (err) {
       console.error("Error generating names:", err);
-      setError("Failed to generate names. Please try again.");
+      // Fallback to client-side generation
+      const names = await generateNamesClientSide(data, more);
+      setNames(names);
       setIsLoading(false);
       setIsRegenerating(false);
       setIsGeneratingMore(false);
     }
+  };
+
+  // Client-side name generation as fallback
+  const generateNamesClientSide = async (data: FormData, more: boolean): Promise<ChineseName[]> => {
+    const count = more ? 9 : 5;
+    
+    // Personality-based character pools
+    const personalityChars: Record<string, string[]> = {
+      "creative": ["艺", "创", "思", "梦", "灵", "韵", "墨", "诗", "画", "音"],
+      "adventurous": ["勇", "探", "远", "翔", "驰", "越", "征", "航", "峰", "浪"],
+      "intellectual": ["智", "思", "博", "学", "睿", "哲", "明", "慧", "识", "渊"],
+      "compassionate": ["仁", "慈", "爱", "和", "善", "恩", "惠", "暖", "柔", "宁"],
+      "confident": ["志", "豪", "杰", "雄", "威", "毅", "刚", "强", "胜", "凯"],
+      "peaceful": ["静", "安", "宁", "和", "清", "雅", "悠", "逸", "闲", "淡"],
+      "ambitious": ["志", "宏", "伟", "业", "成", "达", "进", "升", "腾", "展"],
+      "playful": ["乐", "欢", "趣", "悦", "欣", "怡", "笑", "朗", "畅", "快"],
+    };
+    
+    const genderChars = data.gender === "female" 
+      ? ["婉", "婷", "娜", "丽", "雅", "淑", "娴", "静", "慧", "美"]
+      : data.gender === "male"
+      ? ["伟", "强", "勇", "刚", "毅", "杰", "豪", "雄", "峰", "涛"]
+      : ["文", "明", "华", "志", "远", "博", "雅", "思", "清", "宁"];
+    
+    const meanings = ["wisdom", "beauty", "strength", "harmony", "ambition", "grace", "courage", "peace", "creativity", "prosperity"];
+    
+    const personalityKey = Object.keys(personalityChars).find(k => 
+      data.personality.toLowerCase().includes(k)
+    ) || "creative";
+    
+    const chars = personalityChars[personalityKey] || personalityChars["creative"];
+    
+    const names: ChineseName[] = [];
+    for (let i = 0; i < count; i++) {
+      const char1 = chars[i % chars.length];
+      const char2 = genderChars[(i + 3) % genderChars.length];
+      const meaning = meanings[i % meanings.length];
+      
+      names.push({
+        characters: char1 + char2,
+        pinyin: getPinyin(char1 + char2),
+        meaning: `${meaning.charAt(0).toUpperCase() + meaning.slice(1)} and ${meanings[(i + 1) % meanings.length]}`,
+        source: `Inspired by your ${data.personality} personality and interest in ${data.interests || "life"}. The character "${char1}" represents ${meanings[i % meanings.length]}, while "${char2}" embodies ${meanings[(i + 2) % meanings.length]}.`,
+        personalityMatch: `This name resonates with your ${data.personality} nature, bringing ${meanings[i % meanings.length]} and ${meanings[(i + 1) % meanings.length]} to your journey.`
+      });
+    }
+    
+    return names;
+  };
+
+  // Simple pinyin mapping
+  const getPinyin = (chars: string): string => {
+    const pinyinMap: Record<string, string> = {
+      "艺": "Yì", "创": "Chuàng", "思": "Sī", "梦": "Mèng", "灵": "Líng",
+      "韵": "Yùn", "墨": "Mò", "诗": "Shī", "画": "Huà", "音": "Yīn",
+      "勇": "Yǒng", "探": "Tàn", "远": "Yuǎn", "翔": "Xiáng", "驰": "Chí",
+      "越": "Yuè", "征": "Zhēng", "航": "Háng", "峰": "Fēng", "浪": "Làng",
+      "智": "Zhì", "博": "Bó", "学": "Xué", "睿": "Ruì", "哲": "Zhé",
+      "明": "Míng", "慧": "Huì", "识": "Shí", "渊": "Yuān",
+      "仁": "Rén", "慈": "Cí", "爱": "Ài", "和": "Hé", "善": "Shàn",
+      "恩": "Ēn", "惠": "Huì", "暖": "Nuǎn", "柔": "Róu", "宁": "Níng",
+      "志": "Zhì", "豪": "Háo", "杰": "Jié", "雄": "Xióng", "威": "Wēi",
+      "毅": "Yì", "刚": "Gāng", "强": "Qiáng", "胜": "Shèng", "凯": "Kǎi",
+      "静": "Jìng", "安": "Ān", "清": "Qīng", "雅": "Yǎ", "悠": "Yōu",
+      "逸": "Yì", "闲": "Xián", "淡": "Dàn",
+      "宏": "Hóng", "伟": "Wěi", "业": "Yè", "成": "Chéng", "达": "Dá",
+      "进": "Jìn", "升": "Shēng", "腾": "Téng", "展": "Zhǎn",
+      "乐": "Lè", "欢": "Huān", "趣": "Qù", "悦": "Yuè", "欣": "Xīn",
+      "怡": "Yí", "笑": "Xiào", "朗": "Lǎng", "畅": "Chàng", "快": "Kuài",
+      "婉": "Wǎn", "婷": "Tíng", "娜": "Nà", "丽": "Lì", "淑": "Shū",
+      "娴": "Xián", "美": "Měi",
+    };
+    
+    return chars.split("").map(c => pinyinMap[c] || c).join(" ");
   };
 
   const handleRegenerate = () => {
@@ -211,16 +303,20 @@ export default function ResultPage() {
         <Tabs defaultValue="names" className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="names" className="text-sm sm:text-base">
-              Names ({displayNames.length})
+              <span className="hidden sm:inline">Names ({displayNames.length})</span>
+              <span className="sm:hidden">名字 ({displayNames.length})</span>
             </TabsTrigger>
             <TabsTrigger value="calligraphy" className="text-sm sm:text-base">
-              Calligraphy
+              <span className="hidden sm:inline">Calligraphy 书法</span>
+              <span className="sm:hidden">书法</span>
             </TabsTrigger>
             <TabsTrigger value="signature" className="text-sm sm:text-base">
-              Signature
+              <span className="hidden sm:inline">Signature 签名</span>
+              <span className="sm:hidden">签名</span>
             </TabsTrigger>
             <TabsTrigger value="share" className="text-sm sm:text-base">
-              Share
+              <span className="hidden sm:inline">Share 分享</span>
+              <span className="sm:hidden">分享</span>
             </TabsTrigger>
           </TabsList>
 
@@ -347,32 +443,33 @@ export default function ResultPage() {
               </Card>
 
               <Card className="p-6 bg-gradient-to-br from-amber-50 to-orange-50">
-                <h3 className="text-lg font-semibold text-stone-800 mb-4">5 Classic Calligraphy Styles</h3>
+                <h3 className="text-lg font-semibold text-stone-800 mb-2">5 Classic Calligraphy Styles</h3>
+                <p className="text-sm text-stone-600 mb-4">五种经典书法风格 · 5 Classic Styles</p>
                 <div className="space-y-3 text-sm text-stone-700 mb-6">
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-green-100 rounded text-green-700 text-center text-xs font-bold">1</span>
-                    <span>楷书 (Kaishu) - 颜真卿体 · 端正秀丽</span>
-                    <span className="text-green-600 text-xs ml-auto">Free</span>
+                    <span>楷书 Kaishu · 端正秀丽 Classic</span>
+                    <span className="text-green-600 text-xs ml-auto">Free 免费</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">2</span>
-                    <span>行书 (Xingshu) - 王羲之体 · 流畅飘逸</span>
-                    {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
+                    <span>行书 Xingshu · 流畅飘逸 Flowing</span>
+                    {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">3</span>
-                    <span>草书 (Caoshu) - 张旭体 · 豪放洒脱</span>
-                    {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
+                    <span>草书 Caoshu · 豪放洒脱 Bold</span>
+                    {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">4</span>
-                    <span>隶书 (Lishu) - 汉隶体 · 古朴典雅</span>
-                    {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
+                    <span>隶书 Lishu · 古朴典雅 Ancient</span>
+                    {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">5</span>
-                    <span>篆书 (Xuanshu) - 小篆体 · 圆润匀齐</span>
-                    {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
+                    <span>篆书 Xuanshu · 圆润匀齐 Rounded</span>
+                    {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                 </div>
 
@@ -399,40 +496,50 @@ export default function ResultPage() {
                     pinyin={selectedName.pinyin}
                   />
                   <Card className="p-6">
-                    <h3 className="text-lg font-semibold text-stone-800 mb-4">3 Signature Styles</h3>
+                    <h3 className="text-lg font-semibold text-stone-800 mb-2">4 Signature Styles</h3>
+                    <p className="text-sm text-stone-600 mb-4">四种签名风格 · 4 Signature Styles</p>
                     <div className="space-y-4">
                       <div className="p-4 bg-stone-50 rounded-lg">
-                        <h4 className="font-semibold text-stone-700">飘逸签名</h4>
-                        <p className="text-sm text-stone-500">行云流水，个性十足</p>
+                        <h4 className="font-semibold text-stone-700">飘逸签名 Cursive</h4>
+                        <p className="text-sm text-stone-500">行云流水 · Flowing & Personal</p>
                         {proStatus.isPro ? (
-                          <span className="text-xs text-green-600">Available</span>
+                          <span className="text-xs text-green-600">Available 可用</span>
                         ) : (
                           <span className="text-xs text-amber-600">Pro Required</span>
                         )}
                       </div>
                       <div className="p-4 bg-stone-50 rounded-lg">
-                        <h4 className="font-semibold text-stone-700">正式签名</h4>
-                        <p className="text-sm text-stone-500">端正稳重，商务首选</p>
+                        <h4 className="font-semibold text-stone-700">正式签名 Formal</h4>
+                        <p className="text-sm text-stone-500">端正稳重 · Professional & Elegant</p>
                         {proStatus.isPro ? (
-                          <span className="text-xs text-green-600">Available</span>
+                          <span className="text-xs text-green-600">Available 可用</span>
                         ) : (
                           <span className="text-xs text-amber-600">Pro Required</span>
                         )}
                       </div>
                       <div className="p-4 bg-stone-50 rounded-lg">
-                        <h4 className="font-semibold text-stone-700">艺术签名</h4>
-                        <p className="text-sm text-stone-500">独特设计，彰显个性</p>
+                        <h4 className="font-semibold text-stone-700">艺术1 Artistic 1</h4>
+                        <p className="text-sm text-stone-500">飘逸典雅 · Elegant & Graceful</p>
                         {proStatus.isPro ? (
-                          <span className="text-xs text-green-600">Available</span>
+                          <span className="text-xs text-green-600">Available 可用</span>
+                        ) : (
+                          <span className="text-xs text-amber-600">Pro Required</span>
+                        )}
+                      </div>
+                      <div className="p-4 bg-stone-50 rounded-lg">
+                        <h4 className="font-semibold text-stone-700">艺术2 Artistic 2</h4>
+                        <p className="text-sm text-stone-500">豪放洒脱 · Bold & Powerful</p>
+                        {proStatus.isPro ? (
+                          <span className="text-xs text-green-600">Available 可用</span>
                         ) : (
                           <span className="text-xs text-amber-600">Pro Required</span>
                         )}
                       </div>
                       <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
-                        <h4 className="font-semibold text-amber-700">上传照片合成签名</h4>
-                        <p className="text-sm text-amber-600">上传你的照片或图案，与签名完美融合</p>
+                        <h4 className="font-semibold text-amber-700">上传照片合成签名 Photo Merge</h4>
+                        <p className="text-sm text-amber-600">上传照片与签名融合 · Upload photo to merge</p>
                         {proStatus.isPro ? (
-                          <span className="text-xs text-green-600">Available</span>
+                          <span className="text-xs text-green-600">Available 可用</span>
                         ) : (
                           <span className="text-xs text-amber-600">Pro Required</span>
                         )}

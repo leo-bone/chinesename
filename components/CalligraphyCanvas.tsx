@@ -24,13 +24,13 @@ interface CalligraphyCanvasProps {
 }
 
 // Font families for different calligraphy styles
-// Using Noto Serif SC which has the most comprehensive Chinese character coverage
-const FONT_CONFIG: Record<CalligraphyStyle, { font: string; name: string; desc: string }> = {
-  kaishu: { font: "'Noto Serif SC', 'Source Han Serif CN', serif", name: "楷书", desc: "端正秀丽 · 经典永不过时" },
-  xingshu: { font: "'Noto Serif SC', 'Source Han Serif CN', serif", name: "行书", desc: "流畅飘逸 · 书法入门首选" },
-  caoshu: { font: "'Noto Serif SC', 'Source Han Serif CN', serif", name: "草书", desc: "豪放洒脱 · 艺术境界" },
-  lishu: { font: "'Noto Serif SC', 'Source Han Serif CN', serif", name: "隶书", desc: "古朴典雅 · 汉代风韵" },
-  xuanshu: { font: "'Noto Serif SC', 'Source Han Serif CN', serif", name: "篆书", desc: "圆润匀齐 · 古文字之美" },
+// Using Google Fonts with Chinese support for best cross-device compatibility
+const FONT_CONFIG: Record<CalligraphyStyle, { font: string; name: string; desc: string; enName: string }> = {
+  kaishu: { font: "'Noto Serif SC', 'Source Han Serif CN', serif", name: "楷书", enName: "Kaishu", desc: "端正秀丽 · Classic & Elegant" },
+  xingshu: { font: "'Ma Shan Zheng', cursive", name: "行书", enName: "Xingshu", desc: "流畅飘逸 · Flowing & Graceful" },
+  caoshu: { font: "'ZCOOL XiaoWei', cursive", name: "草书", enName: "Caoshu", desc: "豪放洒脱 · Bold & Artistic" },
+  lishu: { font: "'Noto Serif SC', serif", name: "隶书", enName: "Lishu", desc: "古朴典雅 · Ancient & Dignified" },
+  xuanshu: { font: "'Ma Shan Zheng', cursive", name: "篆书", enName: "Xuanshu", desc: "圆润匀齐 · Rounded & Ancient" },
 };
 
 const SIZE_CONFIG = {
@@ -101,26 +101,93 @@ export default function CalligraphyCanvas({
       ctx.stroke();
     }
 
-    // Main calligraphy
-    ctx.fillStyle = "#1c1917";
-    ctx.font = `bold ${sizeConfig.fontSize}px ${fontConfig.font}`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    // Shadow for depth
-    ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
-    ctx.shadowBlur = 3;
-    ctx.shadowOffsetX = 1;
-    ctx.shadowOffsetY = 1;
-
-    // Draw characters
+    // Style-specific rendering
     const charArray = characters.split("");
     const totalWidth = charArray.length * sizeConfig.fontSize * 0.7;
     const startX = (canvasWidth - totalWidth) / 2 + sizeConfig.fontSize * 0.35;
 
-    charArray.forEach((char, i) => {
-      ctx.fillText(char, startX + i * sizeConfig.fontSize * 0.7, canvasHeight / 2);
-    });
+    switch (selectedStyle) {
+      case "kaishu":
+        // 楷书 - Standard, upright, clear
+        ctx.fillStyle = "#1c1917";
+        ctx.font = `bold ${sizeConfig.fontSize}px ${fontConfig.font}`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+        ctx.shadowBlur = 2;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
+        charArray.forEach((char, i) => {
+          ctx.fillText(char, startX + i * sizeConfig.fontSize * 0.7, canvasHeight / 2);
+        });
+        break;
+
+      case "xingshu":
+        // 行书 - Flowing, connected, slightly slanted
+        ctx.save();
+        ctx.translate(canvasWidth / 2, canvasHeight / 2);
+        ctx.rotate(-0.05);
+        ctx.fillStyle = "#1e3a5f";
+        ctx.font = `${sizeConfig.fontSize * 1.1}px ${fontConfig.font}`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.shadowColor = "rgba(30, 58, 95, 0.2)";
+        ctx.shadowBlur = 4;
+        ctx.fillText(characters, 0, 0);
+        ctx.restore();
+        break;
+
+      case "caoshu":
+        // 草书 - Bold, wild, artistic
+        ctx.save();
+        ctx.translate(canvasWidth / 2, canvasHeight / 2);
+        ctx.rotate(-0.08);
+        ctx.fillStyle = "#0c0a09";
+        ctx.font = `bold ${sizeConfig.fontSize * 1.2}px ${fontConfig.font}`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        // Add dramatic shadow
+        ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+        ctx.shadowBlur = 8;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+        ctx.fillText(characters, 0, 0);
+        ctx.restore();
+        break;
+
+      case "lishu":
+        // 隶书 - Wide, flat, ancient style
+        ctx.save();
+        ctx.translate(canvasWidth / 2, canvasHeight / 2);
+        ctx.scale(1.3, 0.9); // Make it wider and flatter
+        ctx.fillStyle = "#292524";
+        ctx.font = `bold ${sizeConfig.fontSize}px ${fontConfig.font}`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
+        ctx.shadowBlur = 3;
+        ctx.fillText(characters, 0, 0);
+        ctx.restore();
+        break;
+
+      case "xuanshu":
+        // 篆书 - Rounded, ancient, uniform
+        ctx.save();
+        ctx.translate(canvasWidth / 2, canvasHeight / 2);
+        ctx.fillStyle = "#451a03";
+        ctx.font = `${sizeConfig.fontSize * 0.95}px ${fontConfig.font}`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.shadowColor = "rgba(69, 26, 3, 0.2)";
+        ctx.shadowBlur = 2;
+        ctx.fillText(characters, 0, 0);
+        // Add decorative border effect
+        ctx.strokeStyle = "#92400e";
+        ctx.lineWidth = 1;
+        ctx.strokeText(characters, 0, 0);
+        ctx.restore();
+        break;
+    }
 
     // Reset shadow
     ctx.shadowColor = "transparent";

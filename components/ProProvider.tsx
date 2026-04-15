@@ -21,7 +21,7 @@ const USED_CODES_KEY = "chinesename_used_codes";
 // Valid unlock codes - ONE-TIME USE ONLY
 // After a code is used, it cannot be used again
 const VALID_CODES: Record<string, string> = {
-  // New codes (2026-04-15)
+  // Premium codes (2026-04-15)
   "CNAME2026C0DV": "Pro Key",
   "LUCKY2027HX8Q": "Pro Key",
   "GIFTXUQVD": "Pro Key",
@@ -30,12 +30,6 @@ const VALID_CODES: Record<string, string> = {
   "FREEGOLDGC42": "Pro Key",
   "WELCOMEPLUSUENP": "Pro Key",
   "CHINAONE9HD9": "Pro Key",
-  // Legacy codes
-  "CNPRO2024": "Standard Pro Key",
-  "CNPRO2025": "Standard Pro Key",
-  "CNVIP001": "VIP Pro Key",
-  "CNVIP2024": "VIP Pro Key",
-  "CNBETA": "Beta Tester Key",
 };
 
 const ProContext = createContext<ProContextType | undefined>(undefined);
