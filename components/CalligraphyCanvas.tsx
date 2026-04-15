@@ -24,13 +24,13 @@ interface CalligraphyCanvasProps {
 }
 
 // Font families for different calligraphy styles
-// Using system fonts with distinct visual characteristics for best cross-device compatibility
+// Using web-safe fonts with distinct visual characteristics for best cross-device compatibility
 const FONT_CONFIG: Record<CalligraphyStyle, { font: string; name: string; desc: string; enName: string }> = {
-  kaishu: { font: "'FangSong', 'STFangsong', '仿宋', serif", name: "仿宋", enName: "FangSong", desc: "清秀雅致 · Elegant & Refined" },
-  xingshu: { font: "'KaiTi', 'STKaiti', '楷体', serif", name: "楷体", enName: "KaiTi", desc: "端正规范 · Standard & Classic" },
-  caoshu: { font: "'LiSu', 'LiShu', '隶书', serif", name: "隶书", enName: "LiShu", desc: "古朴典雅 · Ancient & Dignified" },
-  lishu: { font: "'YouYuan', 'STYuanti', '幼圆', sans-serif", name: "圆体", enName: "Rounded", desc: "圆润可爱 · Rounded & Friendly" },
-  xuanshu: { font: "'SimHei', 'STHeiti', '黑体', sans-serif", name: "黑体", enName: "HeiTi", desc: "醒目有力 · Bold & Strong" },
+  kaishu: { font: "'Georgia', 'Times New Roman', serif", name: "宋体", enName: "SongTi", desc: "端庄典雅 · Elegant & Classic" },
+  xingshu: { font: "'Palatino Linotype', 'Book Antiqua', serif", name: "楷体", enName: "KaiTi", desc: "端正规范 · Standard & Refined" },
+  caoshu: { font: "'Courier New', monospace", name: "隶意", enName: "LiStyle", desc: "古朴方正 · Ancient & Square" },
+  lishu: { font: "'Verdana', 'Geneva', sans-serif", name: "圆体", enName: "Rounded", desc: "圆润现代 · Modern & Friendly" },
+  xuanshu: { font: "'Impact', 'Arial Black', sans-serif", name: "黑体", enName: "HeiTi", desc: "醒目有力 · Bold & Strong" },
 };
 
 const SIZE_CONFIG = {
@@ -108,80 +108,100 @@ export default function CalligraphyCanvas({
 
     switch (selectedStyle) {
       case "kaishu":
-        // 仿宋 - Elegant, slender, refined (清秀雅致)
+        // 宋体 - Elegant serif, classic style
         ctx.save();
         ctx.translate(canvasWidth / 2, canvasHeight / 2);
         ctx.fillStyle = "#1c1917";
         ctx.font = `${sizeConfig.fontSize}px ${fontConfig.font}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        // Subtle elegant shadow
-        ctx.shadowColor = "rgba(0, 0, 0, 0.08)";
-        ctx.shadowBlur = 1;
-        ctx.shadowOffsetX = 0.5;
-        ctx.shadowOffsetY = 0.5;
+        // Elegant shadow
+        ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+        ctx.shadowBlur = 2;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
         ctx.fillText(characters, 0, 0);
+        // Add stroke effect
+        ctx.strokeStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.lineWidth = 1;
+        ctx.strokeText(characters, 0, 0);
         ctx.restore();
         break;
 
       case "xingshu":
-        // 楷体 - Standard, upright, clear (端正规范)
+        // 楷体 - Refined, slightly italicized
         ctx.save();
         ctx.translate(canvasWidth / 2, canvasHeight / 2);
+        ctx.rotate(-0.03);
         ctx.fillStyle = "#1e3a5f";
         ctx.font = `bold ${sizeConfig.fontSize}px ${fontConfig.font}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.shadowColor = "rgba(30, 58, 95, 0.15)";
-        ctx.shadowBlur = 2;
-        ctx.fillText(characters, 0, 0);
-        ctx.restore();
-        break;
-
-      case "caoshu":
-        // 隶书 - Wide, flat, ancient style (古朴典雅)
-        ctx.save();
-        ctx.translate(canvasWidth / 2, canvasHeight / 2);
-        ctx.scale(1.2, 0.95); // Make it wider and slightly flatter
-        ctx.fillStyle = "#292524";
-        ctx.font = `bold ${sizeConfig.fontSize * 1.1}px ${fontConfig.font}`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
+        ctx.shadowColor = "rgba(30, 58, 95, 0.2)";
         ctx.shadowBlur = 3;
         ctx.fillText(characters, 0, 0);
         ctx.restore();
         break;
 
+      case "caoshu":
+        // 隶意 - Monospace, wide style
+        ctx.save();
+        ctx.translate(canvasWidth / 2, canvasHeight / 2);
+        ctx.scale(1.15, 1);
+        ctx.fillStyle = "#3d3d3d";
+        ctx.font = `bold ${sizeConfig.fontSize}px ${fontConfig.font}`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
+        ctx.shadowBlur = 2;
+        ctx.fillText(characters, 0, 0);
+        // Underline effect
+        ctx.strokeStyle = "rgba(61, 61, 61, 0.3)";
+        ctx.lineWidth = 2;
+        const metrics = ctx.measureText(characters);
+        ctx.beginPath();
+        ctx.moveTo(-metrics.width / 2, sizeConfig.fontSize * 0.6);
+        ctx.lineTo(metrics.width / 2, sizeConfig.fontSize * 0.6);
+        ctx.stroke();
+        ctx.restore();
+        break;
+
       case "lishu":
-        // 圆体 - Rounded, friendly, modern (圆润可爱)
+        // 圆体 - Rounded, friendly
         ctx.save();
         ctx.translate(canvasWidth / 2, canvasHeight / 2);
         ctx.fillStyle = "#5c2d91";
         ctx.font = `bold ${sizeConfig.fontSize}px ${fontConfig.font}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        // Soft glow effect
-        ctx.shadowColor = "rgba(92, 45, 145, 0.15)";
-        ctx.shadowBlur = 4;
+        // Soft glow
+        ctx.shadowColor = "rgba(92, 45, 145, 0.2)";
+        ctx.shadowBlur = 5;
         ctx.fillText(characters, 0, 0);
+        // Add inner highlight
+        ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+        ctx.fillText(characters, -1, -1);
         ctx.restore();
         break;
 
       case "xuanshu":
-        // 黑体 - Bold, strong, impactful (醒目有力)
+        // 黑体 - Bold, strong
         ctx.save();
         ctx.translate(canvasWidth / 2, canvasHeight / 2);
         ctx.fillStyle = "#0c0a09";
-        ctx.font = `900 ${sizeConfig.fontSize * 1.05}px ${fontConfig.font}`;
+        ctx.font = `900 ${sizeConfig.fontSize * 1.1}px ${fontConfig.font}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        // Strong shadow for bold effect
-        ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 1;
-        ctx.shadowOffsetY = 1;
+        // Strong shadow
+        ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+        ctx.shadowBlur = 5;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
         ctx.fillText(characters, 0, 0);
+        // Outline effect
+        ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
+        ctx.lineWidth = 2;
+        ctx.strokeText(characters, 0, 0);
         ctx.restore();
         break;
     }

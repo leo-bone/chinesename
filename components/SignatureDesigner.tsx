@@ -316,21 +316,35 @@ export default function SignatureDesigner({
       ctx.restore();
     }
 
-    // Draw uploaded image if exists
+    // Draw uploaded image if exists - Photo in main position, signature at bottom right
     if (uploadedImage) {
-      const imgWidth = uploadedImage.width * imagePosition.scale;
-      const imgHeight = uploadedImage.height * imagePosition.scale;
-      const imgX = canvas.width * imagePosition.x - imgWidth / 2;
-      const imgY = canvas.height * imagePosition.y - imgHeight / 2;
+      // Calculate photo size - take up most of the canvas
+      const maxPhotoWidth = canvas.width * 0.7;
+      const maxPhotoHeight = canvas.height * 0.75;
+      const scale = Math.min(
+        maxPhotoWidth / uploadedImage.width,
+        maxPhotoHeight / uploadedImage.height
+      );
+      const imgWidth = uploadedImage.width * scale;
+      const imgHeight = uploadedImage.height * scale;
+      
+      // Center the photo
+      const imgX = (canvas.width - imgWidth) / 2;
+      const imgY = (canvas.height - imgHeight) / 2 - 20;
 
-      // Add subtle shadow
-      ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
-      ctx.shadowBlur = 10;
-      ctx.shadowOffsetX = 3;
-      ctx.shadowOffsetY = 3;
-
+      // Draw photo with subtle border
+      ctx.save();
+      ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
+      ctx.shadowBlur = 15;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 5;
       ctx.drawImage(uploadedImage, imgX, imgY, imgWidth, imgHeight);
-      ctx.shadowColor = "transparent";
+      ctx.restore();
+      
+      // Add white border to photo
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
+      ctx.lineWidth = 8;
+      ctx.strokeRect(imgX - 4, imgY - 4, imgWidth + 8, imgHeight + 8);
     }
   };
 
@@ -391,17 +405,17 @@ export default function SignatureDesigner({
       </h3>
 
       {/* Style Selector */}
-      <div className="grid grid-cols-3 gap-3 mb-4">
+      <div className="grid grid-cols-2 gap-3 mb-4">
         {(Object.keys(SIGNATURE_STYLES) as SignatureStyle[]).map((style) => (
           <Button
             key={style}
             variant={selectedStyle === style ? "default" : "outline"}
-            className={`h-auto py-3 ${selectedStyle === style ? "bg-stone-800" : ""}`}
+            className={`h-auto py-3 px-2 ${selectedStyle === style ? "bg-stone-800" : ""}`}
             onClick={() => setSelectedStyle(style)}
           >
             <div className="text-center">
-              <div className="font-semibold">{SIGNATURE_STYLES[style].name}</div>
-              <div className="text-xs opacity-70">{SIGNATURE_STYLES[style].desc}</div>
+              <div className="font-semibold text-sm">{SIGNATURE_STYLES[style].name}</div>
+              <div className="text-xs opacity-70 mt-1">{SIGNATURE_STYLES[style].desc}</div>
             </div>
           </Button>
         ))}

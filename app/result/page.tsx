@@ -108,71 +108,152 @@ export default function ResultPage() {
   const generateNamesClientSide = async (data: FormData, more: boolean): Promise<ChineseName[]> => {
     const count = more ? 9 : 5;
     
-    // Personality-based character pools
-    const personalityChars: Record<string, string[]> = {
-      "creative": ["艺", "创", "思", "梦", "灵", "韵", "墨", "诗", "画", "音"],
-      "adventurous": ["勇", "探", "远", "翔", "驰", "越", "征", "航", "峰", "浪"],
-      "intellectual": ["智", "思", "博", "学", "睿", "哲", "明", "慧", "识", "渊"],
-      "compassionate": ["仁", "慈", "爱", "和", "善", "恩", "惠", "暖", "柔", "宁"],
-      "confident": ["志", "豪", "杰", "雄", "威", "毅", "刚", "强", "胜", "凯"],
-      "peaceful": ["静", "安", "宁", "和", "清", "雅", "悠", "逸", "闲", "淡"],
-      "ambitious": ["志", "宏", "伟", "业", "成", "达", "进", "升", "腾", "展"],
-      "playful": ["乐", "欢", "趣", "悦", "欣", "怡", "笑", "朗", "畅", "快"],
+    // Generate phonetic-based names (1-2 names based on English name sound)
+    const phoneticNames = generatePhoneticNames(data.englishName, data.gender);
+    
+    // Traditional high-quality Chinese names
+    const traditionalNames = generateTraditionalNames(data, count - phoneticNames.length);
+    
+    // Combine: phonetic names first, then traditional
+    return [...phoneticNames, ...traditionalNames].slice(0, count);
+  };
+  
+  // Generate phonetic-based names from English name
+  const generatePhoneticNames = (englishName: string, gender: string): ChineseName[] => {
+    const name = englishName.toLowerCase();
+    const phoneticMap: Record<string, ChineseName[]> = {
+      // Male names
+      "leo": [
+        { characters: "李奥", pinyin: "Lǐ Ào", meaning: "Strength and nobility", source: "Phonetic match for Leo · 音译谐音", personalityMatch: "Matches the strong sound of your name" },
+        { characters: "立欧", pinyin: "Lì Ōu", meaning: "Stand tall in Europe", source: "Phonetic variation · 音译变体", personalityMatch: "Echoes your name's powerful sound" }
+      ],
+      "alex": [
+        { characters: "艾力", pinyin: "Ài Lì", meaning: "Ivy strength", source: "Phonetic match for Alex · 音译谐音", personalityMatch: "Matches your name's energetic sound" }
+      ],
+      "david": [
+        { characters: "大维", pinyin: "Dà Wéi", meaning: "Great preservation", source: "Phonetic match for David · 音译谐音", personalityMatch: "Honors your name's classic sound" }
+      ],
+      "michael": [
+        { characters: "迈克", pinyin: "Mài Kè", meaning: "Wheat victory", source: "Phonetic match for Michael · 音译谐音", personalityMatch: "Captures your name's strong tone" }
+      ],
+      "john": [
+        { characters: "强", pinyin: "Qiáng", meaning: "Strong", source: "Phonetic match for John · 音译谐音", personalityMatch: "Matches your name's solid sound" }
+      ],
+      // Female names
+      "emma": [
+        { characters: "艾玛", pinyin: "Ài Mǎ", meaning: "Ivy agate", source: "Phonetic match for Emma · 音译谐音", personalityMatch: "Matches your name's elegant sound" }
+      ],
+      "sophia": [
+        { characters: "索菲", pinyin: "Suǒ Fēi", meaning: "Search fragrance", source: "Phonetic match for Sophia · 音译谐音", personalityMatch: "Echoes your name's graceful tone" }
+      ],
+      "lily": [
+        { characters: "莉莉", pinyin: "Lì Lì", meaning: "Jasmine", source: "Phonetic match for Lily · 音译谐音", personalityMatch: "Matches your name's delicate sound" }
+      ],
+      "grace": [
+        { characters: "格蕾丝", pinyin: "Gé Lěi Sī", meaning: "Pattern bud silk", source: "Phonetic match for Grace · 音译谐音", personalityMatch: "Captures your name's elegant sound" }
+      ],
+      "anna": [
+        { characters: "安娜", pinyin: "Ān Nà", meaning: "Peaceful graceful", source: "Phonetic match for Anna · 音译谐音", personalityMatch: "Matches your name's gentle tone" }
+      ],
     };
     
-    const genderChars = data.gender === "female" 
-      ? ["婉", "婷", "娜", "丽", "雅", "淑", "娴", "静", "慧", "美"]
-      : data.gender === "male"
-      ? ["伟", "强", "勇", "刚", "毅", "杰", "豪", "雄", "峰", "涛"]
-      : ["文", "明", "华", "志", "远", "博", "雅", "思", "清", "宁"];
-    
-    const meanings = ["wisdom", "beauty", "strength", "harmony", "ambition", "grace", "courage", "peace", "creativity", "prosperity"];
-    
-    const personalityKey = Object.keys(personalityChars).find(k => 
-      data.personality.toLowerCase().includes(k)
-    ) || "creative";
-    
-    const chars = personalityChars[personalityKey] || personalityChars["creative"];
-    
-    const names: ChineseName[] = [];
-    for (let i = 0; i < count; i++) {
-      const char1 = chars[i % chars.length];
-      const char2 = genderChars[(i + 3) % genderChars.length];
-      const meaning = meanings[i % meanings.length];
-      
-      names.push({
-        characters: char1 + char2,
-        pinyin: getPinyin(char1 + char2),
-        meaning: `${meaning.charAt(0).toUpperCase() + meaning.slice(1)} and ${meanings[(i + 1) % meanings.length]}`,
-        source: `Inspired by your ${data.personality} personality and interest in ${data.interests || "life"}. The character "${char1}" represents ${meanings[i % meanings.length]}, while "${char2}" embodies ${meanings[(i + 2) % meanings.length]}.`,
-        personalityMatch: `This name resonates with your ${data.personality} nature, bringing ${meanings[i % meanings.length]} and ${meanings[(i + 1) % meanings.length]} to your journey.`
-      });
+    // Find matching phonetic names
+    for (const [key, names] of Object.entries(phoneticMap)) {
+      if (name.includes(key)) {
+        return names.slice(0, 2); // Max 2 phonetic names
+      }
     }
     
-    return names;
+    // Generate generic phonetic name if no match
+    const firstChar = name.charAt(0).toUpperCase();
+    const genericPhonetic: Record<string, ChineseName> = {
+      "A": { characters: "艾", pinyin: "Ài", meaning: "Ivy, beautiful", source: "Phonetic starting with A · A音开头", personalityMatch: "Matches your name's initial sound" },
+      "B": { characters: "贝", pinyin: "Bèi", meaning: "Shell, treasure", source: "Phonetic starting with B · B音开头", personalityMatch: "Echoes your name's beginning sound" },
+      "C": { characters: "凯", pinyin: "Kǎi", meaning: "Victory, triumph", source: "Phonetic starting with C/K · C/K音开头", personalityMatch: "Matches your name's strong opening" },
+      "D": { characters: "大", pinyin: "Dà", meaning: "Great, big", source: "Phonetic starting with D · D音开头", personalityMatch: "Captures your name's bold start" },
+      "E": { characters: "伊", pinyin: "Yī", meaning: "That one, elegant", source: "Phonetic starting with E · E音开头", personalityMatch: "Matches your name's elegant sound" },
+      "J": { characters: "杰", pinyin: "Jié", meaning: "Outstanding, hero", source: "Phonetic starting with J · J音开头", personalityMatch: "Echoes your name's strong beginning" },
+      "M": { characters: "麦", pinyin: "Mài", meaning: "Wheat, harvest", source: "Phonetic starting with M · M音开头", personalityMatch: "Matches your name's warm tone" },
+      "S": { characters: "思", pinyin: "Sī", meaning: "Think, thought", source: "Phonetic starting with S · S音开头", personalityMatch: "Captures your name's thoughtful sound" },
+      "T": { characters: "泰", pinyin: "Tài", meaning: "Peaceful, safe", source: "Phonetic starting with T · T音开头", personalityMatch: "Matches your name's solid opening" },
+    };
+    
+    if (genericPhonetic[firstChar]) {
+      return [genericPhonetic[firstChar]];
+    }
+    
+    return []; // No phonetic match
+  };
+  
+  // Generate traditional high-quality Chinese names
+  const generateTraditionalNames = (data: FormData, count: number): ChineseName[] => {
+    // High-quality traditional name characters
+    const maleNames: ChineseName[] = [
+      { characters: "子轩", pinyin: "Zǐ Xuān", meaning: "Son of nobility", source: "From classical literature · 取自经典文学", personalityMatch: "Conveys dignity and scholarly grace" },
+      { characters: "浩然", pinyin: "Hào Rán", meaning: "Vast and righteous", source: "Mencius · 《孟子》", personalityMatch: "Embodies grand moral character" },
+      { characters: "睿渊", pinyin: "Ruì Yuān", meaning: "Wise and profound", source: "Ancient wisdom texts · 古籍智慧", personalityMatch: "Reflects deep intelligence" },
+      { characters: "文博", pinyin: "Wén Bó", meaning: "Cultured and learned", source: "Traditional scholarly ideal · 传统学者风范", personalityMatch: "Shows literary excellence" },
+      { characters: "俊熙", pinyin: "Jùn Xī", meaning: "Talented and bright", source: "Classical poetry · 古典诗词", personalityMatch: "Radiates talent and optimism" },
+      { characters: "泽楷", pinyin: "Zé Kǎi", meaning: "Graceful model", source: "Confucian tradition · 儒家传统", personalityMatch: "Exemplifies virtuous conduct" },
+      { characters: "明辉", pinyin: "Míng Huī", meaning: "Bright radiance", source: "Tang Dynasty poetry · 唐诗", personalityMatch: "Shines with inner light" },
+      { characters: "修杰", pinyin: "Xiū Jié", meaning: "Cultivated excellence", source: "Classical cultivation · 修身之道", personalityMatch: "Demonstrates self-improvement" },
+    ];
+    
+    const femaleNames: ChineseName[] = [
+      { characters: "诗涵", pinyin: "Shī Hán", meaning: "Poetic grace", source: "Tang poetry tradition · 唐诗传统", personalityMatch: "Embodies artistic elegance" },
+      { characters: "雅琪", pinyin: "Yǎ Qí", meaning: "Elegant jade", source: "Classical feminine ideal · 古典女性美", personalityMatch: "Radiates refined beauty" },
+      { characters: "梦琪", pinyin: "Mèng Qí", meaning: "Dream jade", source: "Romantic poetry · 浪漫诗词", personalityMatch: "Carries dreamy elegance" },
+      { characters: "雨萱", pinyin: "Yǔ Xuān", meaning: "Rain lily", source: "Nature poetry · 自然诗词", personalityMatch: "Fresh and nurturing spirit" },
+      { characters: "欣怡", pinyin: "Xīn Yí", meaning: "Joyful harmony", source: "Classical blessings · 古典祝福", personalityMatch: "Brings happiness and peace" },
+      { characters: "思颖", pinyin: "Sī Yǐng", meaning: "Thoughtful excellence", source: "Scholarly tradition · 学者传统", personalityMatch: "Shows intelligent grace" },
+      { characters: "佳怡", pinyin: "Jiā Yí", meaning: "Beautiful harmony", source: "Traditional virtues · 传统美德", personalityMatch: "Radiates pleasant charm" },
+      { characters: "若曦", pinyin: "Ruò Xī", meaning: "Like morning light", source: "Classical imagery · 古典意象", personalityMatch: "Gentle as dawn" },
+    ];
+    
+    const neutralNames: ChineseName[] = [
+      { characters: "文轩", pinyin: "Wén Xuān", meaning: "Cultured pavilion", source: "Scholarly tradition · 学者传统", personalityMatch: "Shows intellectual depth" },
+      { characters: "明远", pinyin: "Míng Yuǎn", meaning: "Bright and far-reaching", source: "Classical wisdom · 古典智慧", personalityMatch: "Visionary and clear-minded" },
+      { characters: "思远", pinyin: "Sī Yuǎn", meaning: "Thoughtful and far-seeing", source: "Philosophical texts · 哲学典籍", personalityMatch: "Deep thinker" },
+      { characters: "清扬", pinyin: "Qīng Yáng", meaning: "Clear and elevated", source: "Book of Songs · 《诗经》", personalityMatch: "Pure and uplifting" },
+      { characters: "云帆", pinyin: "Yún Fān", meaning: "Cloud sail", source: "Li Bai poetry · 李白诗", personalityMatch: "Adventurous spirit" },
+      { characters: "景行", pinyin: "Jǐng Xíng", meaning: "Noble conduct", source: "Book of Songs · 《诗经》", personalityMatch: "Exemplary behavior" },
+    ];
+    
+    let namePool: ChineseName[];
+    if (data.gender === "male") {
+      namePool = [...maleNames, ...neutralNames];
+    } else if (data.gender === "female") {
+      namePool = [...femaleNames, ...neutralNames];
+    } else {
+      namePool = [...neutralNames, ...maleNames.slice(0, 4), ...femaleNames.slice(0, 4)];
+    }
+    
+    // Shuffle and return requested count
+    const shuffled = namePool.sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count);
   };
 
   // Simple pinyin mapping
   const getPinyin = (chars: string): string => {
     const pinyinMap: Record<string, string> = {
-      "艺": "Yì", "创": "Chuàng", "思": "Sī", "梦": "Mèng", "灵": "Líng",
-      "韵": "Yùn", "墨": "Mò", "诗": "Shī", "画": "Huà", "音": "Yīn",
-      "勇": "Yǒng", "探": "Tàn", "远": "Yuǎn", "翔": "Xiáng", "驰": "Chí",
-      "越": "Yuè", "征": "Zhēng", "航": "Háng", "峰": "Fēng", "浪": "Làng",
-      "智": "Zhì", "博": "Bó", "学": "Xué", "睿": "Ruì", "哲": "Zhé",
-      "明": "Míng", "慧": "Huì", "识": "Shí", "渊": "Yuān",
-      "仁": "Rén", "慈": "Cí", "爱": "Ài", "和": "Hé", "善": "Shàn",
-      "恩": "Ēn", "惠": "Huì", "暖": "Nuǎn", "柔": "Róu", "宁": "Níng",
-      "志": "Zhì", "豪": "Háo", "杰": "Jié", "雄": "Xióng", "威": "Wēi",
-      "毅": "Yì", "刚": "Gāng", "强": "Qiáng", "胜": "Shèng", "凯": "Kǎi",
-      "静": "Jìng", "安": "Ān", "清": "Qīng", "雅": "Yǎ", "悠": "Yōu",
-      "逸": "Yì", "闲": "Xián", "淡": "Dàn",
-      "宏": "Hóng", "伟": "Wěi", "业": "Yè", "成": "Chéng", "达": "Dá",
-      "进": "Jìn", "升": "Shēng", "腾": "Téng", "展": "Zhǎn",
-      "乐": "Lè", "欢": "Huān", "趣": "Qù", "悦": "Yuè", "欣": "Xīn",
-      "怡": "Yí", "笑": "Xiào", "朗": "Lǎng", "畅": "Chàng", "快": "Kuài",
-      "婉": "Wǎn", "婷": "Tíng", "娜": "Nà", "丽": "Lì", "淑": "Shū",
-      "娴": "Xián", "美": "Měi",
+      // New traditional names
+      "子": "Zǐ", "轩": "Xuān", "浩": "Hào", "然": "Rán", "睿": "Ruì", "渊": "Yuān",
+      "文": "Wén", "博": "Bó", "俊": "Jùn", "熙": "Xī", "泽": "Zé", "楷": "Kǎi",
+      "明": "Míng", "辉": "Huī", "修": "Xiū", "杰": "Jié", "诗": "Shī", "涵": "Hán",
+      "雅": "Yǎ", "琪": "Qí", "梦": "Mèng", "雨": "Yǔ", "萱": "Xuān", "欣": "Xīn",
+      "怡": "Yí", "思": "Sī", "颖": "Yǐng", "佳": "Jiā", "若": "Ruò", "曦": "Xī",
+      "远": "Yuǎn", "清": "Qīng", "扬": "Yáng", "云": "Yún", "帆": "Fān", "景": "Jǐng",
+      "行": "Xíng", "李": "Lǐ", "奥": "Ào", "立": "Lì", "欧": "Ōu", "艾": "Ài",
+      "力": "Lì", "大": "Dà", "维": "Wéi", "迈": "Mài", "克": "Kè", "强": "Qiáng",
+      "索": "Suǒ", "菲": "Fēi", "莉": "Lì", "格": "Gé", "蕾": "Lěi", "丝": "Sī",
+      "安": "Ān", "娜": "Nà", "贝": "Bèi", "伊": "Yī", "凯": "Kǎi", "泰": "Tài",
+      "麦": "Mài", "吉": "Jí", "祥": "Xiáng", "瑞": "Ruì", "福": "Fú", "禄": "Lù",
+      "寿": "Shòu", "康": "Kāng", "宁": "Níng", "和": "Hé", "平": "Píng", "顺": "Shùn",
+      "达": "Dá", "兴": "Xīng", "盛": "Shèng", "昌": "Chāng", "隆": "Lóng", "华": "Huá",
+      "富": "Fù", "贵": "Guì", "荣": "Róng", "耀": "Yào", "光": "Guāng", "彩": "Cǎi",
+      "灵": "Líng", "秀": "Xiù", "英": "Yīng", "伟": "Wěi", "毅": "Yì",
+      "刚": "Gāng", "勇": "Yǒng", "智": "Zhì", "慧": "Huì", "仁": "Rén", "义": "Yì",
+      "礼": "Lǐ", "信": "Xìn", "忠": "Zhōng", "孝": "Xiào", "廉": "Lián", "耻": "Chǐ",
     };
     
     return chars.split("").map(c => pinyinMap[c] || c).join(" ");

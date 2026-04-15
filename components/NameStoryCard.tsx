@@ -76,103 +76,109 @@ export default function NameStoryCard({
     ctx.lineWidth = 2;
     ctx.strokeRect(45, 45, width - 90, height - 90);
 
-    // Header decoration
+    // Header decoration - Bilingual
     ctx.fillStyle = "#92400e";
-    ctx.font = "bold 32px 'Noto Serif SC', serif";
+    ctx.font = "bold 28px 'Noto Serif SC', serif";
     ctx.textAlign = "center";
-    ctx.fillText("中华传统文化 · 姓名证书", width / 2, 120);
+    ctx.fillText("Chinese Name Certificate · 姓名证书", width / 2, 100);
 
     // Decorative line
     ctx.strokeStyle = "#d97706";
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(200, 150);
-    ctx.lineTo(width - 200, 150);
+    ctx.moveTo(250, 130);
+    ctx.lineTo(width - 250, 130);
     ctx.stroke();
 
     // Small decorative circles
     ctx.fillStyle = "#d97706";
     ctx.beginPath();
-    ctx.arc(200, 150, 5, 0, Math.PI * 2);
+    ctx.arc(250, 130, 6, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(width - 200, 150, 5, 0, Math.PI * 2);
+    ctx.arc(width - 250, 130, 6, 0, Math.PI * 2);
     ctx.fill();
 
-    // "Certificate of Name" label
+    // "Certificate of Name" label - Bilingual
     ctx.fillStyle = "#78350f";
-    ctx.font = "bold 48px 'Noto Serif SC', serif";
-    ctx.fillText("姓名证书", width / 2, 230);
+    ctx.font = "bold 42px 'Noto Serif SC', serif";
+    ctx.fillText("姓名证书 Name Certificate", width / 2, 200);
 
-    // Recipient
+    // Recipient - Bilingual
     ctx.fillStyle = "#451a03";
-    ctx.font = "28px 'Noto Sans SC', sans-serif";
-    ctx.fillText(`授予：${formData.englishName}`, width / 2, 310);
+    ctx.font = "24px 'Noto Sans SC', sans-serif";
+    ctx.fillText(`授予 Awarded to: ${formData.englishName}`, width / 2, 270);
 
     // Main name - large calligraphy
     ctx.fillStyle = "#1c1917";
-    ctx.font = "bold 200px 'Noto Serif SC', serif";
+    ctx.font = "bold 180px 'Noto Serif SC', serif";
     ctx.textAlign = "center";
-    ctx.fillText(name.characters, width / 2, 520);
+    ctx.fillText(name.characters, width / 2, 460);
 
     // Pinyin
     ctx.fillStyle = "#78716c";
-    ctx.font = "italic 36px 'Noto Sans SC', sans-serif";
-    ctx.fillText(name.pinyin, width / 2, 580);
+    ctx.font = "italic 32px 'Noto Sans SC', sans-serif";
+    ctx.fillText(name.pinyin, width / 2, 510);
 
-    // Meaning section
+    // Meaning section - Bilingual
     ctx.fillStyle = "#78350f";
-    ctx.font = "bold 28px 'Noto Serif SC', serif";
+    ctx.font = "bold 24px 'Noto Serif SC', serif";
     ctx.textAlign = "left";
-    ctx.fillText("名字寓意", 150, 680);
+    ctx.fillText("名字寓意 Meaning", 120, 600);
 
     ctx.fillStyle = "#1c1917";
-    ctx.font = "24px 'Noto Sans SC', sans-serif";
-    ctx.fillText(name.meaning, 150, 730);
-
-    // Source section
-    ctx.fillStyle = "#78350f";
-    ctx.font = "bold 28px 'Noto Serif SC', serif";
-    ctx.fillText("出处典故", 150, 820);
-
-    ctx.fillStyle = "#44403c";
-    ctx.font = "22px 'Noto Serif SC', serif";
-    // Word wrap for source
-    const sourceLines = wrapText(ctx, name.source, width - 300);
-    sourceLines.forEach((line, i) => {
-      ctx.fillText(line, 150, 870 + i * 35);
+    ctx.font = "22px 'Noto Sans SC', sans-serif";
+    const meaningLines = wrapText(ctx, name.meaning, width - 260);
+    meaningLines.forEach((line, i) => {
+      ctx.fillText(line, 120, 640 + i * 32);
     });
 
-    // Personality match
+    // Source section - Bilingual
+    const sourceStartY = 640 + meaningLines.length * 32 + 30;
     ctx.fillStyle = "#78350f";
-    ctx.font = "bold 28px 'Noto Serif SC', serif";
-    ctx.fillText("与您的契合", 150, 1000);
+    ctx.font = "bold 24px 'Noto Serif SC', serif";
+    ctx.fillText("出处典故 Source", 120, sourceStartY);
 
     ctx.fillStyle = "#44403c";
-    ctx.font = "22px 'Noto Sans SC', sans-serif";
-    const matchLines = wrapText(ctx, name.personalityMatch, width - 300);
+    ctx.font = "20px 'Noto Serif SC', serif";
+    const sourceLines = wrapText(ctx, name.source, width - 260);
+    sourceLines.forEach((line, i) => {
+      ctx.fillText(line, 120, sourceStartY + 40 + i * 30);
+    });
+
+    // Personality match - Bilingual
+    const matchStartY = sourceStartY + 40 + sourceLines.length * 30 + 30;
+    ctx.fillStyle = "#78350f";
+    ctx.font = "bold 24px 'Noto Serif SC', serif";
+    ctx.fillText("与您的契合 Why It Fits", 120, matchStartY);
+
+    ctx.fillStyle = "#44403c";
+    ctx.font = "20px 'Noto Sans SC', sans-serif";
+    const matchLines = wrapText(ctx, name.personalityMatch, width - 260);
     matchLines.forEach((line, i) => {
-      ctx.fillText(line, 150, 1050 + i * 35);
+      ctx.fillText(line, 120, matchStartY + 40 + i * 30);
     });
 
     // Footer decoration
+    const footerY = Math.max(matchStartY + 40 + matchLines.length * 30 + 60, 1200);
     ctx.strokeStyle = "#d97706";
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(150, 1300);
-    ctx.lineTo(width - 150, 1300);
+    ctx.moveTo(150, footerY);
+    ctx.lineTo(width - 150, footerY);
     ctx.stroke();
 
-    // Info row
+    // Info row - Bilingual
     ctx.fillStyle = "#78716c";
-    ctx.font = "18px 'Noto Sans SC', sans-serif";
+    ctx.font = "16px 'Noto Sans SC', sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText(`性别：${formData.gender === 'male' ? '男' : formData.gender === 'female' ? '女' : '中性'}  |  年龄：${formData.age}  |  性格：${getPersonalityLabel(formData.personality)}`, width / 2, 1350);
+    const genderText = formData.gender === 'male' ? '男 Male' : formData.gender === 'female' ? '女 Female' : '中性 Neutral';
+    ctx.fillText(`性别 Gender: ${genderText}  |  年龄 Age: ${formData.age}  |  性格 Personality: ${getPersonalityLabel(formData.personality)}`, width / 2, footerY + 35);
 
     // Website
     ctx.fillStyle = "#92400e";
-    ctx.font = "20px 'Noto Sans SC', sans-serif";
-    ctx.fillText("chinesename.uichain.org", width / 2, 1400);
+    ctx.font = "18px 'Noto Sans SC', sans-serif";
+    ctx.fillText("chinesename.uichain.org", width / 2, footerY + 70);
 
     // Seal/stamp
     ctx.save();
