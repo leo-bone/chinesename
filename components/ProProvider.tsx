@@ -12,18 +12,21 @@ interface ProContextType {
   proStatus: ProStatus;
   unlock: (code: string) => boolean;
   lock: () => void;
+  isCodeUsed: (code: string) => boolean;
 }
 
 const PRO_STORAGE_KEY = "chinesename_pro_status";
+const USED_CODES_KEY = "chinesename_used_codes";
 
-// Valid unlock codes (in production, this should be server-side)
-const VALID_CODES = [
-  "CNPRO2024",
-  "CNPRO2025",
-  "CNVIP001",
-  "CNVIP2024",
-  "CNBETA",
-];
+// Valid unlock codes - ONE-TIME USE ONLY
+// After a code is used, it cannot be used again
+const VALID_CODES: Record<string, string> = {
+  "CNPRO2024": "Standard Pro Key",
+  "CNPRO2025": "Standard Pro Key",
+  "CNVIP001": "VIP Pro Key",
+  "CNVIP2024": "VIP Pro Key",
+  "CNBETA": "Beta Tester Key",
+};
 
 const ProContext = createContext<ProContextType | undefined>(undefined);
 
@@ -47,19 +50,40 @@ export function ProProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Check if a code has already been used
+  const isCodeUsed = (code: string): boolean => {
+    const normalizedCode = code.trim().toUpperCase();
+    const usedCodes = JSON.parse(localStorage.getItem(USED_CODES_KEY) || "[]");
+    return usedCodes.includes(normalizedCode);
+  };
+
   const unlock = (code: string): boolean => {
     const normalizedCode = code.trim().toUpperCase();
-    if (VALID_CODES.includes(normalizedCode)) {
-      const newStatus: ProStatus = {
-        isPro: true,
-        unlockCode: normalizedCode,
-        unlockAt: Date.now(),
-      };
-      setProStatus(newStatus);
-      localStorage.setItem(PRO_STORAGE_KEY, JSON.stringify(newStatus));
-      return true;
+    
+    // Check if this is a valid code
+    if (!VALID_CODES[normalizedCode]) {
+      return false;
     }
-    return false;
+    
+    // Check if code has already been used
+    if (isCodeUsed(normalizedCode)) {
+      return false;
+    }
+    
+    // Mark code as used
+    const usedCodes = JSON.parse(localStorage.getItem(USED_CODES_KEY) || "[]");
+    usedCodes.push(normalizedCode);
+    localStorage.setItem(USED_CODES_KEY, JSON.stringify(usedCodes));
+    
+    // Activate Pro status
+    const newStatus: ProStatus = {
+      isPro: true,
+      unlockCode: normalizedCode,
+      unlockAt: Date.now(),
+    };
+    setProStatus(newStatus);
+    localStorage.setItem(PRO_STORAGE_KEY, JSON.stringify(newStatus));
+    return true;
   };
 
   const lock = () => {
@@ -73,7 +97,7 @@ export function ProProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ProContext.Provider value={{ proStatus, unlock, lock }}>
+    <ProContext.Provider value={{ proStatus, unlock, lock, isCodeUsed }}>
       {children}
     </ProContext.Provider>
   );

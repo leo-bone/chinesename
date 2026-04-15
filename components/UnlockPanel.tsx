@@ -13,7 +13,7 @@ interface UnlockPanelProps {
 }
 
 export default function UnlockPanel({ onClose, compact = false }: UnlockPanelProps) {
-  const { proStatus, unlock } = usePro();
+  const { proStatus, unlock, isCodeUsed } = usePro();
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [isUnlocking, setIsUnlocking] = useState(false);
@@ -28,12 +28,19 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
     setError("");
 
     setTimeout(() => {
+      // Check if code was already used
+      if (isCodeUsed(code)) {
+        setError("This code has already been used. Each code can only be used once.");
+        setIsUnlocking(false);
+        return;
+      }
+      
       const success = unlock(code);
       if (success) {
         toast.success("Pro features unlocked!");
         setCode("");
       } else {
-        setError("Invalid code. Please try again.");
+        setError("Invalid code. Please check and try again.");
       }
       setIsUnlocking(false);
     }, 500);

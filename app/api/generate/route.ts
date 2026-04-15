@@ -17,6 +17,40 @@ interface GenerateRequest {
   more?: boolean; // If true, generate 9 names instead of 5
 }
 
+// Helper function to map personality traits to relevant character meanings
+function getPersonalityKeywords(personality: string): string {
+  const personalityMap: Record<string, string> = {
+    "creative": "artistic expression, imagination, innovation, beauty",
+    "adventurous": "courage, exploration, freedom, journey",
+    "intellectual": "wisdom, knowledge, learning, insight",
+    "compassionate": "kindness, love, harmony, empathy",
+    "confident": "strength, leadership, achievement, excellence",
+    "peaceful": "tranquility, harmony, balance, nature",
+    "ambitious": "achievement, success, aspiration, determination",
+    "playful": "joy, happiness, vitality, spontaneity",
+    "reserved": "wisdom, depth, contemplation, inner strength",
+    "energetic": "vitality, dynamism, enthusiasm, action",
+    "analytical": "clarity, precision, insight, reason",
+    "intuitive": "perception, wisdom, insight, spiritual depth",
+    "practical": "stability, reliability, groundedness, wisdom",
+    "romantic": "love, beauty, passion, emotion",
+    "logical": "wisdom, clarity, order, reason",
+    "empathetic": "compassion, kindness, harmony, understanding",
+    "bold": "courage, strength, leadership, determination",
+    "gentle": "grace, kindness, beauty, tranquility",
+    "witty": "intelligence, humor, cleverness, insight",
+    "serious": "depth, wisdom, commitment, dedication"
+  };
+  
+  const lowerPersonality = personality.toLowerCase();
+  for (const key of Object.keys(personalityMap)) {
+    if (lowerPersonality.includes(key)) {
+      return personalityMap[key];
+    }
+  }
+  return "unique character, positive virtue, personal strength";
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body: GenerateRequest = await request.json();
@@ -24,9 +58,9 @@ export async function POST(request: NextRequest) {
 
     const count = more ? 9 : 5;
 
-    const prompt = `You are an expert in Chinese naming culture with deep knowledge of classical Chinese literature, philosophy, and character meanings.
+    const prompt = `You are a master of Chinese naming traditions with deep expertise in classical poetry, philosophy, mythology, and modern naming trends.
 
-Create ${count} personalized Chinese names for a person with the following profile:
+Create ${count} highly personalized Chinese names that are TAILORED specifically to this individual:
 - English Name: ${englishName}
 - Gender: ${gender}
 - Age: ${age}
@@ -35,31 +69,47 @@ Create ${count} personalized Chinese names for a person with the following profi
 - Profession/Field: ${profession || "Not specified"}
 - Desired Meaning: ${desiredMeaning || "Not specified"}
 
-For each name, provide:
-1. characters: The Chinese characters (2-3 characters)
-2. pinyin: Pinyin with tone marks (e.g., "Zhì Yuǎn")
-3. meaning: Brief English meaning (1 sentence)
-4. culturalSignificance: Detailed cultural explanation of each character and its significance (2-3 sentences)
-5. personalityMatch: Why this name fits the person's personality (1-2 sentences)
+## Naming Strategy
 
-Requirements:
-- Names should be elegant, meaningful, and culturally appropriate
-- Avoid characters with negative connotations or difficult pronunciations
-- Consider the person's personality traits and desired meaning
-- Include a mix of traditional and modern names
-- Ensure names sound harmonious and have good visual balance
-${more ? '- These are PREMIUM names - make them EXTRAORDINARY and unique!' : ''}
+For FREE names (5 names):
+- Choose characters that directly relate to: ${personality} personality, ${interests || "interests"}, ${profession || "profession"}
+- Use common but meaningful characters
+- Focus on straightforward positive meanings
 
-Return ONLY a valid JSON array in this exact format:
+${more ? `For PREMIUM names (9 names) - make them EXTRAORDINARY:
+- Explore niche, literary characters not commonly used
+- Incorporate classical poetry references
+- Use metaphor and symbolism from nature, mythology, or virtue
+- Create names that sound unique and memorable
+- Consider characters with multiple layers of meaning
+- Include at least 2-3 names with rare/elegant character combinations
+- Each name should feel like a precious discovery, not a common choice` : ''}
+
+## Character Selection Guidelines
+
+For each name, pick characters based on these PERSONAL traits:
+${personality ? `- Personality "${personality}": Choose characters representing: ${getPersonalityKeywords(personality)}` : ""}
+${interests ? `- Interests "${interests}": Incorporate themes related to: ${interests}` : ""}
+${profession ? `- Profession "${profession}": Consider characters that reflect wisdom, skill, or ambition related to: ${profession}` : ""}
+${desiredMeaning ? `- Desired meaning "${desiredMeaning}": Find characters embodying: ${desiredMeaning}` : ""}
+
+## Output Format
+Return ONLY a valid JSON array with ${count} names:
 [
   {
     "characters": "志远",
     "pinyin": "Zhì Yuǎn",
     "meaning": "Ambitious and far-reaching",
-    "culturalSignificance": "志 (Zhì) represents ambition and willpower...",
-    "personalityMatch": "Perfect for someone with big dreams..."
+    "culturalSignificance": "志 represents ambition and willpower; 远 means distant/future-oriented. Together, it embodies the virtue of aspiring to great things while maintaining vision.",
+    "personalityMatch": "Perfect for someone with ${personality} personality who desires ${desiredMeaning || "ambition and achievement"}"
   }
-]`;
+]
+
+## Critical Rules
+- EVERY name must directly connect to the person's UNIQUE traits (personality, interests, profession)
+- Avoid generic names that could fit anyone
+- Each name should feel personally crafted for this individual
+- Ensure variety: different themes, different tones, different character structures`;
 
     const completion = await openai.chat.completions.create({
       model: "deepseek-chat",

@@ -23,14 +23,14 @@ interface CalligraphyCanvasProps {
   className?: string;
 }
 
-// Font families for different calligraphy styles (using Google Fonts - Ma Shan Zheng)
-// Ma Shan Zheng is a free Google Font that provides authentic Chinese calligraphy styles
+// Font families for different calligraphy styles
+// Using Noto Serif SC which has the most comprehensive Chinese character coverage
 const FONT_CONFIG: Record<CalligraphyStyle, { font: string; name: string; desc: string }> = {
-  kaishu: { font: "'Ma Shan Zheng', 'Noto Serif SC', serif", name: "楷书", desc: "颜真卿体 · 端正秀丽" },
-  xingshu: { font: "'ZCOOL XiaoWei', 'Noto Serif SC', serif", name: "行书", desc: "王羲之体 · 流畅飘逸" },
-  caoshu: { font: "'Ma Shan Zheng', 'Noto Serif SC', cursive", name: "草书", desc: "张旭体 · 豪放洒脱" },
-  lishu: { font: "'ZCOOL XiaoWei', 'Noto Serif SC', serif", name: "隶书", desc: "汉隶体 · 古朴典雅" },
-  xuanshu: { font: "'ZCOOL XiaoWei', 'Noto Serif SC', serif", name: "篆书", desc: "小篆体 · 圆润匀齐" },
+  kaishu: { font: "'Noto Serif SC', 'Source Han Serif CN', serif", name: "楷书", desc: "端正秀丽 · 经典永不过时" },
+  xingshu: { font: "'Noto Serif SC', 'Source Han Serif CN', serif", name: "行书", desc: "流畅飘逸 · 书法入门首选" },
+  caoshu: { font: "'Noto Serif SC', 'Source Han Serif CN', serif", name: "草书", desc: "豪放洒脱 · 艺术境界" },
+  lishu: { font: "'Noto Serif SC', 'Source Han Serif CN', serif", name: "隶书", desc: "古朴典雅 · 汉代风韵" },
+  xuanshu: { font: "'Noto Serif SC', 'Source Han Serif CN', serif", name: "篆书", desc: "圆润匀齐 · 古文字之美" },
 };
 
 const SIZE_CONFIG = {
