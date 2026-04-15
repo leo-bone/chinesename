@@ -19,23 +19,23 @@ interface SignatureDesignerProps {
 
 const SIGNATURE_STYLES: Record<SignatureStyle, { name: string; desc: string; font: string }> = {
   cursive: {
-    name: "飘逸签名 Cursive",
-    desc: "行云流水，个性十足 · Flowing & Personal",
+    name: "飘逸签名 · Cursive",
+    desc: "流畅自然",
     font: "'KaiTi', 'STKaiti', '楷体', cursive",
   },
   formal: {
-    name: "正式签名 Formal",
-    desc: "端正稳重，商务首选 · Professional & Elegant",
+    name: "正式签名 · Formal",
+    desc: "端庄稳重",
     font: "'FangSong', 'STFangsong', '仿宋', serif",
   },
   artistic1: {
-    name: "王羲之风格 Wang Xizhi",
-    desc: "飘逸典雅，行云流水 · Elegant & Graceful",
+    name: "艺术签名1 · Artistic 1",
+    desc: "优雅灵动",
     font: "'LiSu', 'LiShu', '隶书', cursive",
   },
   artistic2: {
-    name: "毛泽东风格 Mao Zedong",
-    desc: "豪放洒脱，大气磅礴 · Bold & Powerful",
+    name: "艺术签名2 · Artistic 2",
+    desc: "大气磅礴",
     font: "'YouYuan', 'STYuanti', '幼圆', cursive",
   },
 };
@@ -193,7 +193,7 @@ export default function SignatureDesigner({
       ctx.quadraticCurveTo(canvas.width / 2 + 100, canvas.height / 2 + 60, canvas.width / 2 + 160, canvas.height / 2 + 72);
       ctx.stroke();
       
-      // 印章
+      // 印章 - 简约风格
       ctx.save();
       ctx.translate(canvas.width / 2 + 185, canvas.height / 2 + 62);
       ctx.rotate(0.08);
@@ -206,7 +206,7 @@ export default function SignatureDesigner({
       ctx.font = "bold 12px serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("书", 0, 0);
+      ctx.fillText("印", 0, 0);
       ctx.restore();
       
       ctx.restore();
@@ -299,7 +299,7 @@ export default function SignatureDesigner({
       ctx.stroke();
       ctx.restore();
       
-      // 大印章
+      // 大印章 - 简约风格
       ctx.save();
       ctx.translate(canvas.width / 2 + 240, canvas.height / 2 + 110);
       ctx.rotate(-0.15);
@@ -312,39 +312,28 @@ export default function SignatureDesigner({
       ctx.font = "bold 24px serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("毛", 0, 0);
+      ctx.fillText("名", 0, 0);
       ctx.restore();
     }
 
-    // Draw uploaded image if exists - Photo in main position, signature at bottom right
+    // Draw uploaded image if exists - Photo in main position (background), signature overlay at bottom right
     if (uploadedImage) {
-      // Calculate photo size - take up most of the canvas
-      const maxPhotoWidth = canvas.width * 0.7;
-      const maxPhotoHeight = canvas.height * 0.75;
-      const scale = Math.min(
-        maxPhotoWidth / uploadedImage.width,
-        maxPhotoHeight / uploadedImage.height
+      // Photo takes full canvas as background
+      const scale = Math.max(
+        canvas.width / uploadedImage.width,
+        canvas.height / uploadedImage.height
       );
       const imgWidth = uploadedImage.width * scale;
       const imgHeight = uploadedImage.height * scale;
-      
-      // Center the photo
       const imgX = (canvas.width - imgWidth) / 2;
-      const imgY = (canvas.height - imgHeight) / 2 - 20;
+      const imgY = (canvas.height - imgHeight) / 2;
 
-      // Draw photo with subtle border
-      ctx.save();
-      ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
-      ctx.shadowBlur = 15;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 5;
+      // Draw photo as background
       ctx.drawImage(uploadedImage, imgX, imgY, imgWidth, imgHeight);
-      ctx.restore();
       
-      // Add white border to photo
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
-      ctx.lineWidth = 8;
-      ctx.strokeRect(imgX - 4, imgY - 4, imgWidth + 8, imgHeight + 8);
+      // Add semi-transparent overlay for better signature visibility
+      ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
   };
 

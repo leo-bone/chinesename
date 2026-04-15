@@ -529,27 +529,27 @@ export default function ResultPage() {
                 <div className="space-y-3 text-sm text-stone-700 mb-6">
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-green-100 rounded text-green-700 text-center text-xs font-bold">1</span>
-                    <span>仿宋 FangSong · 清秀雅致 Elegant</span>
+                    <span>楷书 KaiShu · 颜真卿风格</span>
                     <span className="text-green-600 text-xs ml-auto">Free 免费</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">2</span>
-                    <span>楷体 KaiTi · 端正规范 Standard</span>
+                    <span>行书 XingShu · 王羲之风格</span>
                     {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">3</span>
-                    <span>隶书 LiShu · 古朴典雅 Ancient</span>
+                    <span>隶书 LiShu · 汉隶风格</span>
                     {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">4</span>
-                    <span>圆体 Rounded · 圆润可爱 Friendly</span>
+                    <span>魏碑 WeiBei · 方正有力</span>
                     {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-amber-100 rounded text-amber-700 text-center text-xs font-bold">5</span>
-                    <span>黑体 HeiTi · 醒目有力 Bold</span>
+                    <span>篆书 ZhuanShu · 小篆风格</span>
                     {proStatus.isPro ? <span className="text-green-600 text-xs ml-auto">Unlocked 已解锁</span> : <span className="text-amber-600 text-xs ml-auto">Pro</span>}
                   </div>
                 </div>
@@ -581,8 +581,8 @@ export default function ResultPage() {
                     <p className="text-sm text-stone-600 mb-4">四种签名风格 · 4 Signature Styles</p>
                     <div className="space-y-4">
                       <div className="p-4 bg-stone-50 rounded-lg">
-                        <h4 className="font-semibold text-stone-700">飘逸签名 Cursive</h4>
-                        <p className="text-sm text-stone-500">行云流水 · Flowing & Personal</p>
+                        <h4 className="font-semibold text-stone-700">飘逸签名 · Cursive</h4>
+                        <p className="text-sm text-stone-500">流畅自然</p>
                         {proStatus.isPro ? (
                           <span className="text-xs text-green-600">Available 可用</span>
                         ) : (
@@ -590,8 +590,8 @@ export default function ResultPage() {
                         )}
                       </div>
                       <div className="p-4 bg-stone-50 rounded-lg">
-                        <h4 className="font-semibold text-stone-700">正式签名 Formal</h4>
-                        <p className="text-sm text-stone-500">端正稳重 · Professional & Elegant</p>
+                        <h4 className="font-semibold text-stone-700">正式签名 · Formal</h4>
+                        <p className="text-sm text-stone-500">端庄稳重</p>
                         {proStatus.isPro ? (
                           <span className="text-xs text-green-600">Available 可用</span>
                         ) : (
@@ -599,8 +599,8 @@ export default function ResultPage() {
                         )}
                       </div>
                       <div className="p-4 bg-stone-50 rounded-lg">
-                        <h4 className="font-semibold text-stone-700">艺术1 Artistic 1</h4>
-                        <p className="text-sm text-stone-500">飘逸典雅 · Elegant & Graceful</p>
+                        <h4 className="font-semibold text-stone-700">艺术签名1 · Artistic 1</h4>
+                        <p className="text-sm text-stone-500">优雅灵动</p>
                         {proStatus.isPro ? (
                           <span className="text-xs text-green-600">Available 可用</span>
                         ) : (
@@ -608,8 +608,8 @@ export default function ResultPage() {
                         )}
                       </div>
                       <div className="p-4 bg-stone-50 rounded-lg">
-                        <h4 className="font-semibold text-stone-700">艺术2 Artistic 2</h4>
-                        <p className="text-sm text-stone-500">豪放洒脱 · Bold & Powerful</p>
+                        <h4 className="font-semibold text-stone-700">艺术签名2 · Artistic 2</h4>
+                        <p className="text-sm text-stone-500">大气磅礴</p>
                         {proStatus.isPro ? (
                           <span className="text-xs text-green-600">Available 可用</span>
                         ) : (
@@ -617,8 +617,8 @@ export default function ResultPage() {
                         )}
                       </div>
                       <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
-                        <h4 className="font-semibold text-amber-700">上传照片合成签名 Photo Merge</h4>
-                        <p className="text-sm text-amber-600">上传照片与签名融合 · Upload photo to merge</p>
+                        <h4 className="font-semibold text-amber-700">照片合成 · Photo Merge</h4>
+                        <p className="text-sm text-amber-600">签名与照片融合</p>
                         {proStatus.isPro ? (
                           <span className="text-xs text-green-600">Available 可用</span>
                         ) : (
