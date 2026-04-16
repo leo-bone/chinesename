@@ -17,26 +17,27 @@ interface SignatureDesignerProps {
   onClose?: () => void;
 }
 
+// All signature styles use Noto Serif SC — fully cross-device compatible
 const SIGNATURE_STYLES: Record<SignatureStyle, { name: string; desc: string; font: string }> = {
   cursive: {
     name: "飘逸签名 · Cursive",
-    desc: "流畅自然",
-    font: "'KaiTi', 'STKaiti', '楷体', cursive",
+    desc: "流畅自然，行云流水",
+    font: "'Noto Serif SC', serif",
   },
   formal: {
     name: "正式签名 · Formal",
-    desc: "端庄稳重",
-    font: "'FangSong', 'STFangsong', '仿宋', serif",
+    desc: "端庄稳重，方正大气",
+    font: "'Noto Serif SC', serif",
   },
   artistic1: {
     name: "艺术签名1 · Artistic 1",
-    desc: "优雅灵动",
-    font: "'LiSu', 'LiShu', '隶书', cursive",
+    desc: "优雅灵动，墨韵飘逸",
+    font: "'Noto Serif SC', serif",
   },
   artistic2: {
     name: "艺术签名2 · Artistic 2",
-    desc: "大气磅礴",
-    font: "'YouYuan', 'STYuanti', '幼圆', cursive",
+    desc: "大气磅礴，气势如虹",
+    font: "'Noto Serif SC', serif",
   },
 };
 
@@ -73,267 +74,218 @@ export default function SignatureDesigner({
     canvas.width = 800;
     canvas.height = 400;
 
-    // Background - clean white
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     const style = SIGNATURE_STYLES[selectedStyle];
     const displayText = customText || characters;
 
-    // Draw signature in different styles based on selection
-    ctx.save();
+    // ── Step 1: Draw background (photo or style-specific paper) ──
+    if (uploadedImage) {
+      // Photo as full-canvas background
+      const scale = Math.max(canvas.width / uploadedImage.width, canvas.height / uploadedImage.height);
+      const imgW = uploadedImage.width * scale;
+      const imgH = uploadedImage.height * scale;
+      const imgX = (canvas.width - imgW) / 2;
+      const imgY = (canvas.height - imgH) / 2;
+      ctx.drawImage(uploadedImage, imgX, imgY, imgW, imgH);
+      // Semi-transparent dark overlay so signature is always readable
+      ctx.fillStyle = "rgba(0,0,0,0.35)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    } else {
+      // Style-specific paper background
+      const bgColors: Record<SignatureStyle, string> = {
+        cursive: "#fefefe",
+        formal: "#f8f6f2",
+        artistic1: "#faf8f5",
+        artistic2: "#f5f0e6",
+      };
+      ctx.fillStyle = bgColors[selectedStyle];
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // ── Step 2: Draw signature on top ──
+    const signatureColor = uploadedImage ? "#ffffff" : undefined;
 
     if (selectedStyle === "cursive") {
-      // Cursive style - flowing
-      ctx.fillStyle = "#1c1917";
-      ctx.font = `bold 72px ${style.font}`;
+      // 飘逸 - flowing, slight tilt, thin weight, ink trail
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2 - 20);
+      ctx.rotate(-0.06);
+      ctx.fillStyle = signatureColor || "#1c1917";
+      ctx.font = `300 80px ${style.font}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      
-      // Add slight rotation for flow effect
-      ctx.translate(canvas.width / 2, canvas.height / 2 - 30);
-      ctx.rotate(-0.05);
+      ctx.shadowColor = signatureColor ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.15)";
+      ctx.shadowBlur = 6;
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 3;
       ctx.fillText(displayText, 0, 0);
       ctx.restore();
-
-      // Pinyin underneath
-      ctx.fillStyle = "#78716c";
-      ctx.font = "italic 24px 'Noto Sans SC', sans-serif";
+      // Pinyin
+      ctx.fillStyle = signatureColor ? "rgba(255,255,255,0.7)" : "#78716c";
+      ctx.font = `italic 22px 'Noto Sans SC', sans-serif`;
       ctx.textAlign = "center";
-      ctx.fillText(pinyin, canvas.width / 2, canvas.height / 2 + 50);
-
-      // Decorative line
-      ctx.strokeStyle = "#d6d3d1";
-      ctx.lineWidth = 1;
+      ctx.fillText(pinyin, canvas.width / 2, canvas.height / 2 + 55);
+      // Flowing underline
+      ctx.strokeStyle = signatureColor ? "rgba(255,255,255,0.4)" : "#d6d3d1";
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = "round";
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2 - 100, canvas.height / 2 + 70);
-      ctx.lineTo(canvas.width / 2 + 100, canvas.height / 2 + 70);
+      ctx.moveTo(canvas.width / 2 - 120, canvas.height / 2 + 72);
+      ctx.quadraticCurveTo(canvas.width / 2, canvas.height / 2 + 80, canvas.width / 2 + 120, canvas.height / 2 + 72);
       ctx.stroke();
 
     } else if (selectedStyle === "formal") {
-      // Formal style - clean and centered, NO pinyin
-      ctx.fillStyle = "#1c1917";
-      ctx.font = `bold 64px ${style.font}`;
+      // 正式 - upright, bold, centered, no decoration
+      ctx.fillStyle = signatureColor || "#0f0f0f";
+      ctx.font = `700 76px ${style.font}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+      ctx.shadowColor = signatureColor ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.12)";
+      ctx.shadowBlur = 3;
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
       ctx.fillText(displayText, canvas.width / 2, canvas.height / 2);
+      // Formal border lines
+      ctx.strokeStyle = signatureColor ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.15)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2 - 160, canvas.height / 2 - 65);
+      ctx.lineTo(canvas.width / 2 + 160, canvas.height / 2 - 65);
+      ctx.moveTo(canvas.width / 2 - 160, canvas.height / 2 + 65);
+      ctx.lineTo(canvas.width / 2 + 160, canvas.height / 2 + 65);
+      ctx.stroke();
 
     } else if (selectedStyle === "artistic1") {
-      // 王羲之风格 - 行书：飘逸流畅、笔势连贯、行云流水
+      // 艺术签名1 - 飘逸行书风：墨蓝色、字间连贯、每字微倾、落款线+印章
       ctx.save();
-      
-      // 宣纸背景
-      ctx.fillStyle = "#faf8f5";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // 纹理
-      for (let i = 0; i < 300; i++) {
-        ctx.fillStyle = `rgba(139, 125, 107, ${Math.random() * 0.02})`;
-        ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
-      }
-      
       const chars = displayText.split('');
-      const startX = canvas.width / 2 - (chars.length * 80) / 2;
+      const spacing = 88;
+      const totalW = chars.length * spacing;
+      const startX = canvas.width / 2 - totalW / 2 + spacing / 2;
       
-      // 绘制每个字 - 行书连笔效果
       chars.forEach((char, i) => {
         ctx.save();
-        const x = startX + i * 85 + 40;
-        const y = canvas.height / 2 - 15 + Math.sin(i * 0.6) * 12;
-        
-        // 轻微倾斜，连贯感
-        const rotation = -0.06 + i * 0.015;
+        const x = startX + i * spacing;
+        const y = canvas.height / 2 - 10 + Math.sin(i * 0.7) * 10;
         ctx.translate(x, y);
-        ctx.rotate(rotation);
-        
-        // 行书笔触 - 浓淡变化
-        // 外晕
-        ctx.fillStyle = "rgba(30, 40, 60, 0.2)";
-        ctx.font = "bold 100px 'KaiTi', 'STKaiti', '楷体', serif";
+        ctx.rotate(-0.05 + i * 0.02);
+        // Ink glow
+        ctx.fillStyle = signatureColor ? "rgba(255,255,255,0.15)" : "rgba(26,40,80,0.18)";
+        ctx.font = `400 96px ${style.font}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(char, 2, 2);
-        
-        // 主笔 - 墨黑
-        ctx.fillStyle = "#1a1a2e";
-        ctx.font = "bold 100px 'KaiTi', 'STKaiti', '楷体', serif";
+        ctx.fillText(char, 2, 3);
+        // Main stroke — ink blue
+        ctx.fillStyle = signatureColor || "#1a2850";
+        ctx.font = `400 96px ${style.font}`;
         ctx.fillText(char, 0, 0);
-        
-        // 飞白
-        ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
+        // Fly-white
+        ctx.fillStyle = "rgba(255,255,255,0.1)";
         ctx.fillText(char, -1, -2);
-        
         ctx.restore();
-        
-        // 连笔游丝 - 字间连贯
+        // Connecting stroke between chars
         if (i < chars.length - 1) {
-          ctx.strokeStyle = "rgba(26, 26, 46, 0.25)";
+          const nextX = startX + (i + 1) * spacing - spacing / 2;
+          ctx.save();
+          ctx.strokeStyle = signatureColor ? "rgba(255,255,255,0.2)" : "rgba(26,40,80,0.2)";
           ctx.lineWidth = 1.5;
+          ctx.lineCap = "round";
           ctx.beginPath();
-          const startX_pos = x + 35;
-          const endX_pos = startX + (i + 1) * 85 + 5;
-          ctx.moveTo(startX_pos, y + Math.random() * 20 - 10);
-          ctx.quadraticCurveTo(
-            (startX_pos + endX_pos) / 2, 
-            y + 25 + Math.sin(i) * 15,
-            endX_pos, 
-            canvas.height / 2 - 15 + Math.sin((i + 1) * 0.6) * 12
-          );
+          ctx.moveTo(x + 36, y + 20);
+          ctx.quadraticCurveTo(x + spacing * 0.5, y + 38, nextX, canvas.height / 2 - 10 + Math.sin((i + 1) * 0.7) * 10 - 20);
           ctx.stroke();
+          ctx.restore();
         }
       });
-      
-      // 落款线 - 流畅
-      ctx.strokeStyle = "#8b7355";
+      // Gold underline
+      ctx.strokeStyle = signatureColor ? "rgba(255,215,120,0.7)" : "#b8860b";
       ctx.lineWidth = 2.5;
       ctx.lineCap = "round";
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2 - 130, canvas.height / 2 + 65);
-      ctx.quadraticCurveTo(canvas.width / 2 - 40, canvas.height / 2 + 75, canvas.width / 2 + 40, canvas.height / 2 + 68);
-      ctx.quadraticCurveTo(canvas.width / 2 + 100, canvas.height / 2 + 60, canvas.width / 2 + 160, canvas.height / 2 + 72);
+      ctx.moveTo(startX - 40, canvas.height / 2 + 65);
+      ctx.quadraticCurveTo(canvas.width / 2, canvas.height / 2 + 78, startX + totalW + 20, canvas.height / 2 + 62);
       ctx.stroke();
-      
-      // 印章 - 简约风格
+      // Red seal
       ctx.save();
-      ctx.translate(canvas.width / 2 + 185, canvas.height / 2 + 62);
-      ctx.rotate(0.08);
+      ctx.translate(startX + totalW + 55, canvas.height / 2 + 60);
+      ctx.rotate(0.1);
       ctx.strokeStyle = "#c41e3a";
       ctx.lineWidth = 2;
       ctx.strokeRect(-16, -16, 32, 32);
-      ctx.fillStyle = "rgba(196, 30, 58, 0.15)";
-      ctx.fillRect(-13, -13, 26, 26);
+      ctx.fillStyle = "rgba(196,30,58,0.12)";
+      ctx.fillRect(-13,-13,26,26);
       ctx.fillStyle = "#c41e3a";
-      ctx.font = "bold 12px serif";
+      ctx.font = "bold 13px 'Noto Serif SC', serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("印", 0, 0);
       ctx.restore();
-      
       ctx.restore();
 
     } else if (selectedStyle === "artistic2") {
-      // 毛泽东风格 - 狂草：豪放磅礴、龙飞凤舞
+      // 艺术签名2 - 豪放草书风：浓墨、大幅度、波动感强、粗下划线+大印章
       ctx.save();
-      
-      // 米黄宣纸
-      ctx.fillStyle = "#f5f0e6";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // 岁月痕迹
-      for (let i = 0; i < 200; i++) {
-        ctx.fillStyle = `rgba(139, 90, 43, ${Math.random() * 0.015})`;
-        ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 4, 1);
-      }
-      
       const chars = displayText.split('');
-      
-      // 整体左倾 - 毛体特征
+      const spacing = 140;
+      const totalW = chars.length * spacing;
+      // Overall slight lean
       ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(-0.22);
+      ctx.rotate(-0.10);
       ctx.translate(-canvas.width / 2, -canvas.height / 2);
-      
+
       chars.forEach((char, i) => {
         ctx.save();
-        
-        // 大幅波动
-        const x = canvas.width / 2 - 120 + i * 130;
-        const y = canvas.height / 2 + Math.sin(i * 1.5) * 50 - 30;
-        
-        // 大幅旋转
-        const charRotation = -0.35 + i * 0.2 + Math.cos(i) * 0.25;
-        
+        const x = canvas.width / 2 - totalW / 2 + spacing / 2 + i * spacing;
+        const y = canvas.height / 2 - 20 + Math.sin(i * 1.4) * 28;
+        const charRot = -0.20 + i * 0.18 + Math.sin(i) * 0.12;
+        const scl = 0.95 + Math.sin(i * 0.8) * 0.12;
         ctx.translate(x, y);
-        ctx.rotate(charRotation);
-        
-        // 大小变化
-        const scale = 1.1 + Math.sin(i * 0.9) * 0.2;
-        ctx.scale(scale, scale);
-        
-        // 泼墨效果 - 多层
-        ctx.fillStyle = "rgba(40, 10, 5, 0.12)";
-        ctx.font = "900 160px 'KaiTi', 'STKaiti', '楷体', serif";
+        ctx.rotate(charRot);
+        ctx.scale(scl, scl);
+        // Shadow ink splash
+        ctx.fillStyle = "rgba(10,5,0,0.18)";
+        ctx.font = `900 130px ${style.font}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(char, 10, 10);
-        
-        ctx.fillStyle = "rgba(30, 8, 4, 0.25)";
-        ctx.font = "900 145px 'KaiTi', serif";
-        ctx.fillText(char, 5, 5);
-        
-        // 主笔 - 浓墨
-        ctx.fillStyle = "#0f0505";
-        ctx.font = "900 135px 'KaiTi', serif";
+        ctx.fillText(char, 8, 8);
+        ctx.fillStyle = "rgba(10,5,0,0.30)";
+        ctx.font = `900 120px ${style.font}`;
+        ctx.fillText(char, 4, 4);
+        // Main - deep black
+        ctx.fillStyle = signatureColor || "#080300";
+        ctx.font = `900 112px ${style.font}`;
         ctx.fillText(char, 0, 0);
-        
-        // 红色点缀
-        ctx.fillStyle = "rgba(160, 20, 20, 0.4)";
-        ctx.fillText(char, 1, 0);
-        
         ctx.restore();
       });
-      
       ctx.restore();
-      
-      // 狂草下划线 - 大幅波浪
+      // Bold wavy underline
       ctx.save();
-      ctx.strokeStyle = "#8b0000";
-      ctx.lineWidth = 6;
+      ctx.strokeStyle = signatureColor ? "rgba(255,80,80,0.7)" : "#8b0000";
+      ctx.lineWidth = 5;
       ctx.lineCap = "round";
-      
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2 - 280, canvas.height / 2 + 110);
-      
-      for (let i = 0; i <= 12; i++) {
-        const x = canvas.width / 2 - 280 + i * 45;
-        const y = canvas.height / 2 + 110 + Math.sin(i * 0.9) * 40 + i * 2;
-        ctx.lineTo(x, y);
+      const ulStartX = canvas.width / 2 - totalW * 0.55;
+      const ulY = canvas.height / 2 + 100;
+      ctx.moveTo(ulStartX, ulY);
+      for (let i = 0; i <= 10; i++) {
+        ctx.lineTo(ulStartX + i * (totalW * 1.1 / 10), ulY + Math.sin(i * 0.9) * 22 + i * 1.5);
       }
       ctx.stroke();
-      
-      // 加粗强调
-      ctx.strokeStyle = "#4a0000";
-      ctx.lineWidth = 10;
-      ctx.beginPath();
-      ctx.moveTo(canvas.width / 2 - 120, canvas.height / 2 + 130);
-      ctx.quadraticCurveTo(canvas.width / 2 + 20, canvas.height / 2 + 170, canvas.width / 2 + 140, canvas.height / 2 + 120);
-      ctx.stroke();
       ctx.restore();
-      
-      // 大印章 - 简约风格
+      // Big red seal
       ctx.save();
-      ctx.translate(canvas.width / 2 + 240, canvas.height / 2 + 110);
-      ctx.rotate(-0.15);
+      ctx.translate(canvas.width / 2 + totalW * 0.6, canvas.height / 2 + 90);
+      ctx.rotate(-0.12);
       ctx.strokeStyle = "#b22222";
-      ctx.lineWidth = 4;
-      ctx.strokeRect(-28, -28, 56, 56);
-      ctx.fillStyle = "rgba(178, 34, 34, 0.2)";
-      ctx.fillRect(-24, -24, 48, 48);
+      ctx.lineWidth = 3.5;
+      ctx.strokeRect(-28,-28,56,56);
+      ctx.fillStyle = "rgba(178,34,34,0.18)";
+      ctx.fillRect(-24,-24,48,48);
       ctx.fillStyle = "#8b0000";
-      ctx.font = "bold 24px serif";
+      ctx.font = "bold 22px 'Noto Serif SC', serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("名", 0, 0);
       ctx.restore();
-    }
-
-    // Draw uploaded image if exists - Photo in main position (background), signature overlay at bottom right
-    if (uploadedImage) {
-      // Photo takes full canvas as background
-      const scale = Math.max(
-        canvas.width / uploadedImage.width,
-        canvas.height / uploadedImage.height
-      );
-      const imgWidth = uploadedImage.width * scale;
-      const imgHeight = uploadedImage.height * scale;
-      const imgX = (canvas.width - imgWidth) / 2;
-      const imgY = (canvas.height - imgHeight) / 2;
-
-      // Draw photo as background
-      ctx.drawImage(uploadedImage, imgX, imgY, imgWidth, imgHeight);
-      
-      // Add semi-transparent overlay for better signature visibility
-      ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
   };
 

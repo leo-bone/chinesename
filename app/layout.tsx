@@ -3,8 +3,9 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import Providers from "./providers";
 
-// Google Fonts for calligraphy styles - using Noto Serif SC as base
-const fontFamilies = "family=Noto+Serif+SC:wght@400;700&display=swap";
+// Google Fonts for calligraphy styles
+// Noto Serif SC: works on ALL devices including mobile (no system font dependency)
+const fontFamilies = "family=Noto+Serif+SC:wght@300;400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap";
 
 export const metadata: Metadata = {
   title: "Chinese Name Generator - Discover Your Perfect Chinese Name",

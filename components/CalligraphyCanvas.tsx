@@ -23,14 +23,14 @@ interface CalligraphyCanvasProps {
   className?: string;
 }
 
-// Font families for different calligraphy styles
-// Using Chinese system fonts with distinct visual characteristics for best cross-device compatibility
+// All styles use Noto Serif SC from Google Fonts — works on ALL devices/mobiles
+// Visual differentiation via weight, color, shadow, transform and texture
 const FONT_CONFIG: Record<CalligraphyStyle, { font: string; name: string; desc: string; enName: string }> = {
-  kaishu: { font: "'KaiTi', 'STKaiti', '楷体', 'BiauKai', serif", name: "楷书", enName: "KaiShu", desc: "颜真卿风格 · 端正规范" },
-  xingshu: { font: "'STXingkai', 'Xingkai SC', '行楷', cursive", name: "行书", enName: "XingShu", desc: "王羲之风格 · 流畅自然" },
-  caoshu: { font: "'LiSu', 'LiShu', '隶书', 'HanziPen SC', serif", name: "隶书", enName: "LiShu", desc: "汉隶风格 · 古朴典雅" },
-  lishu: { font: "'YouYuan', 'Yuanti SC', '圆体', 'Yuanti', sans-serif", name: "魏碑", enName: "WeiBei", desc: "魏碑风格 · 方正有力" },
-  xuanshu: { font: "'SimHei', 'Heiti SC', '黑体', 'Noto Sans CJK SC', sans-serif", name: "篆书", enName: "ZhuanShu", desc: "小篆风格 · 古朴庄重" },
+  kaishu: { font: "'Noto Serif SC', 'Noto Sans SC', serif", name: "楷书", enName: "KaiShu", desc: "端正规范 · Upright & Balanced" },
+  xingshu: { font: "'Noto Serif SC', serif", name: "行书", enName: "XingShu", desc: "流畅飘逸 · Flowing & Elegant" },
+  caoshu: { font: "'Noto Serif SC', serif", name: "隶书", enName: "LiShu", desc: "古朴典雅 · Classical & Dignified" },
+  lishu: { font: "'Noto Serif SC', serif", name: "魏碑", enName: "WeiBei", desc: "方正有力 · Bold & Powerful" },
+  xuanshu: { font: "'Noto Serif SC', serif", name: "篆书", enName: "ZhuanShu", desc: "古朴庄重 · Ancient & Solemn" },
 };
 
 const SIZE_CONFIG = {
@@ -108,104 +108,123 @@ export default function CalligraphyCanvas({
 
     switch (selectedStyle) {
       case "kaishu":
-        // 楷书 - 颜真卿风格：端正规范、笔画饱满
+        // 楷书 - 端正规范：竖直、黑色、方正感
         ctx.save();
         ctx.translate(canvasWidth / 2, canvasHeight / 2);
-        ctx.fillStyle = "#1a1a1a";
-        ctx.font = `bold ${sizeConfig.fontSize}px ${fontConfig.font}`;
+        // Rice paper background
+        ctx.fillStyle = "#f9f6f0";
+        ctx.fillRect(-canvasWidth/2, -canvasHeight/2, canvasWidth, canvasHeight);
+        ctx.fillStyle = "#111111";
+        ctx.font = `700 ${sizeConfig.fontSize}px ${fontConfig.font}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        // 墨韵效果
-        ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
-        ctx.shadowBlur = 3;
+        ctx.shadowColor = "rgba(0,0,0,0.18)";
+        ctx.shadowBlur = 4;
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 2;
         ctx.fillText(characters, 0, 0);
-        // 描边加强
-        ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
-        ctx.lineWidth = 1;
-        ctx.strokeText(characters, 0, 0);
         ctx.restore();
         break;
 
       case "xingshu":
-        // 行书 - 王羲之风格：流畅自然、行云流水
+        // 行书 - 飘逸流畅：墨蓝色、轻微倾斜、连笔感
         ctx.save();
+        // Warm paper background
+        ctx.fillStyle = "#faf8f3";
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         ctx.translate(canvasWidth / 2, canvasHeight / 2);
-        ctx.rotate(-0.02);
-        ctx.fillStyle = "#1e3a5f";
-        ctx.font = `${sizeConfig.fontSize}px ${fontConfig.font}`;
+        ctx.rotate(-0.06);
+        ctx.fillStyle = "#1a2e5c";
+        ctx.font = `400 ${sizeConfig.fontSize}px ${fontConfig.font}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        // 流畅阴影
-        ctx.shadowColor = "rgba(30, 58, 95, 0.15)";
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 1;
-        ctx.shadowOffsetY = 2;
+        ctx.shadowColor = "rgba(20,40,100,0.22)";
+        ctx.shadowBlur = 8;
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 4;
         ctx.fillText(characters, 0, 0);
+        // Subtle fly-white effect
+        ctx.fillStyle = "rgba(255,255,255,0.15)";
+        ctx.fillText(characters, -1, -2);
         ctx.restore();
         break;
 
       case "caoshu":
-        // 隶书 - 汉隶风格：蚕头燕尾、古朴典雅
+        // 隶书 - 古朴典雅：深棕色、横向拉伸、厚重
         ctx.save();
+        ctx.fillStyle = "#f5f0e6";
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         ctx.translate(canvasWidth / 2, canvasHeight / 2);
-        ctx.scale(1.1, 1);
-        ctx.fillStyle = "#2d2d2d";
-        ctx.font = `bold ${sizeConfig.fontSize}px ${fontConfig.font}`;
+        ctx.scale(1.18, 0.88); // 横向拉伸，隶书特征
+        ctx.fillStyle = "#3a2010";
+        ctx.font = `700 ${sizeConfig.fontSize}px ${fontConfig.font}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
+        ctx.shadowColor = "rgba(60,30,10,0.25)";
         ctx.shadowBlur = 3;
         ctx.fillText(characters, 0, 0);
-        // 下划线装饰
-        ctx.strokeStyle = "rgba(45, 45, 45, 0.4)";
-        ctx.lineWidth = 2;
-        const metrics = ctx.measureText(characters);
+        // 蚕头燕尾下划装饰
+        ctx.scale(1/1.18, 1/0.88);
+        ctx.strokeStyle = "rgba(60,30,10,0.35)";
+        ctx.lineWidth = sizeConfig.fontSize * 0.03;
+        const liMetrics = ctx.measureText(characters);
         ctx.beginPath();
-        ctx.moveTo(-metrics.width / 2, sizeConfig.fontSize * 0.55);
-        ctx.lineTo(metrics.width / 2, sizeConfig.fontSize * 0.55);
+        ctx.moveTo(-liMetrics.width * 0.6, sizeConfig.fontSize * 0.5);
+        ctx.lineTo(liMetrics.width * 0.6, sizeConfig.fontSize * 0.5);
         ctx.stroke();
         ctx.restore();
         break;
 
       case "lishu":
-        // 魏碑 - 方正有力、骨力遒劲
+        // 魏碑 - 方正有力：深红棕、粗体、石刻感
         ctx.save();
+        ctx.fillStyle = "#ede8df";
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        // Stone texture
+        for (let i = 0; i < 80; i++) {
+          ctx.fillStyle = `rgba(100,80,60,${Math.random() * 0.03})`;
+          ctx.fillRect(Math.random()*canvasWidth, Math.random()*canvasHeight, 3, 1);
+        }
         ctx.translate(canvasWidth / 2, canvasHeight / 2);
-        ctx.fillStyle = "#3d2817";
-        ctx.font = `bold ${sizeConfig.fontSize}px ${fontConfig.font}`;
+        ctx.fillStyle = "#4a1a05";
+        ctx.font = `900 ${sizeConfig.fontSize}px ${fontConfig.font}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        // 石刻质感
-        ctx.shadowColor = "rgba(61, 40, 23, 0.25)";
-        ctx.shadowBlur = 2;
-        ctx.shadowOffsetX = 1;
-        ctx.shadowOffsetY = 1;
+        ctx.shadowColor = "rgba(74,26,5,0.4)";
+        ctx.shadowBlur = 1;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
         ctx.fillText(characters, 0, 0);
-        // 内高光
-        ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
-        ctx.fillText(characters, -1, -1);
+        // Inner highlight for carved stone look
+        ctx.fillStyle = "rgba(255,255,255,0.07)";
+        ctx.fillText(characters, -1.5, -1.5);
         ctx.restore();
         break;
 
       case "xuanshu":
-        // 篆书 - 小篆风格：古朴庄重、圆润均匀
+        // 篆书 - 古朴庄重：深墨、极细长、古铜色
         ctx.save();
+        ctx.fillStyle = "#f0ebe0";
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        // Aged paper texture
+        for (let i = 0; i < 120; i++) {
+          ctx.fillStyle = `rgba(130,100,50,${Math.random() * 0.025})`;
+          ctx.fillRect(Math.random()*canvasWidth, Math.random()*canvasHeight, 2, 2);
+        }
         ctx.translate(canvasWidth / 2, canvasHeight / 2);
-        ctx.fillStyle = "#0f0f0f";
+        ctx.scale(0.82, 1.15); // 纵向拉长，篆书特征
+        ctx.fillStyle = "#1a0f00";
         ctx.font = `900 ${sizeConfig.fontSize}px ${fontConfig.font}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        // 古铜色阴影
-        ctx.shadowColor = "rgba(139, 90, 43, 0.3)";
-        ctx.shadowBlur = 4;
+        ctx.shadowColor = "rgba(139,90,43,0.5)";
+        ctx.shadowBlur = 5;
         ctx.shadowOffsetX = 1;
         ctx.shadowOffsetY = 2;
         ctx.fillText(characters, 0, 0);
-        // 轮廓
-        ctx.strokeStyle = "rgba(139, 90, 43, 0.15)";
-        ctx.lineWidth = 1;
+        // Bronze outline
+        ctx.strokeStyle = "rgba(139,90,43,0.2)";
+        ctx.lineWidth = 1.5;
         ctx.strokeText(characters, 0, 0);
         ctx.restore();
         break;
