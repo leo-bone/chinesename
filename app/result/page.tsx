@@ -57,30 +57,14 @@ export default function ResultPage() {
 
   const generateNames = async (data: FormData, more: boolean = false) => {
     try {
-      // Try local API first (for development), fallback to direct DeepSeek API
-      const apiUrl = process.env.NODE_ENV === "development" 
-        ? "/api/generate"
-        : "https://api.deepseek.com/v1/chat/completions";
+      // Use Cloudflare Pages Function for API
+      const apiUrl = "/api/generate";
 
-      let response;
-      
-      if (process.env.NODE_ENV === "development") {
-        response = await fetch(apiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...data, more }),
-        });
-      } else {
-        // Production: Call DeepSeek API directly from client
-        // Note: In production, you should use a proxy server to hide API key
-        // For now, we'll use a simple client-side generation as fallback
-        const names = await generateNamesClientSide(data, more);
-        setNames(names);
-        setIsLoading(false);
-        setIsRegenerating(false);
-        setIsGeneratingMore(false);
-        return;
-      }
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, more }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
