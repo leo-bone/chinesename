@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Pages
+name: Deploy to Cloudflare Pages + Worker
 
 on:
   push:
@@ -20,25 +20,28 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Wrangler
+        run: npm install -g wrangler
+
       - name: Build Next.js
         run: npm run build
 
-      - name: Prepare deployment directory
+      - name: Deploy Static Site
         run: |
-          # Copy dist to a temp directory
-          cp -r dist /tmp/deploy
-          # Copy functions to the same directory
-          cp -r functions /tmp/deploy/
-          # List contents for verification
-          ls -la /tmp/deploy/
-
-      - name: Deploy to Cloudflare Pages
-        run: |
-          npm install -g wrangler
-          wrangler pages deploy /tmp/deploy \
+          wrangler pages deploy dist \
             --project-name=chinesename \
             --branch=production
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Deploy API Worker
+        run: |
+          wrangler deploy worker/generate.js \
+            --name=chinesename-api \
+            --env=production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+
