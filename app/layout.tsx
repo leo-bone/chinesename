@@ -10,11 +10,11 @@ const fontFamilies = "family=Noto+Serif+SC:wght@300;400;500;700;900&family=Noto+
 export const metadata: Metadata = {
   title: "Chinese Name Generator - Discover Your Perfect Chinese Name",
   description: "Get a personalized Chinese name based on your personality, interests, and aspirations. Each name comes from classical Chinese poetry with beautiful calligraphy.",
-  keywords: ["Chinese name", "name generator", "Chinese culture", "personalized name", "Chinese poetry"],
+  keywords: ["Chinese name", "name generator", "Chinese culture", "personalized name", "Chinese poetry", "中文名", "起名", "取中文名"],
   authors: [{ name: "Chinese Name Generator" }],
   openGraph: {
     title: "Chinese Name Generator - Discover Your Perfect Chinese Name",
-    description: "Get a personalized Chinese name based on your personality, interests, and aspirations. Each name comes from classical Chinese poetry.",
+    description: "Get a personalized Chinese name based on your personality, interests, and aspirations. Each name comes from classical Chinese poetry with beautiful calligraphy.",
     url: "https://chinesename.uichain.org",
     siteName: "Chinese Name Generator",
     locale: "en_US",
@@ -23,11 +23,14 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Chinese Name Generator - Discover Your Perfect Chinese Name",
-    description: "Get a personalized Chinese name based on your personality, interests, and aspirations.",
+    description: "Get a personalized Chinese name based on your personality, interests, and aspirations. Each name comes from classical Chinese poetry with beautiful calligraphy.",
   },
   robots: {
     index: true,
     follow: true,
+  },
+  alternates: {
+    canonical: "https://chinesename.uichain.org",
   },
 };
 

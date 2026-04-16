@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Sparkles, Loader2, Info } from "lucide-react";
+import { Sparkles, Loader2, Info, Palette, BookOpen, Sparkle } from "lucide-react";
 import Link from "next/link";
 
 interface FormData {
@@ -236,21 +236,21 @@ export default function Home() {
       <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl">
         <div className="text-center">
           <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">🎨</span>
+            <Palette className="w-6 h-6 text-red-700" />
           </div>
           <h3 className="font-semibold text-stone-800 mb-2">Beautiful Calligraphy</h3>
           <p className="text-stone-600 text-sm">Each name comes with elegant Chinese calligraphy visualization</p>
         </div>
         <div className="text-center">
           <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">📖</span>
+            <BookOpen className="w-6 h-6 text-red-700" />
           </div>
           <h3 className="font-semibold text-stone-800 mb-2">Deep Meaning</h3>
           <p className="text-stone-600 text-sm">Detailed explanation of each character&apos;s meaning and cultural significance</p>
         </div>
         <div className="text-center">
           <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">✨</span>
+            <Sparkle className="w-6 h-6 text-red-700" />
           </div>
           <h3 className="font-semibold text-stone-800 mb-2">Personalized</h3>
           <p className="text-stone-600 text-sm">Names tailored to your personality, interests, and aspirations</p>
