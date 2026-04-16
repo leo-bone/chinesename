@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Cloudflare Pages compatible configuration
-  distDir: '.next',
+  output: 'export',
+  distDir: 'dist',
   trailingSlash: true,
   images: {
     unoptimized: true,

@@ -57,8 +57,10 @@ export default function ResultPage() {
 
   const generateNames = async (data: FormData, more: boolean = false) => {
     try {
-      // Call local API (handled by Cloudflare Workers)
-      const apiUrl = "/api/generate";
+      // Call Cloudflare Worker API
+      // In production, this should be your Worker URL
+      // For now, we'll use a relative path that will be handled by Cloudflare routing
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://chinesename-api.your-account.workers.dev/api/generate";
 
       const response = await fetch(apiUrl, {
         method: "POST",
