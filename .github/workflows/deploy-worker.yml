@@ -23,12 +23,19 @@ jobs:
       - name: Build Next.js
         run: npm run build
 
-      - name: Install Wrangler
-        run: npm install -g wrangler
+      - name: Prepare deployment directory
+        run: |
+          # Copy dist to a temp directory
+          cp -r dist /tmp/deploy
+          # Copy functions to the same directory
+          cp -r functions /tmp/deploy/
+          # List contents for verification
+          ls -la /tmp/deploy/
 
       - name: Deploy to Cloudflare Pages
         run: |
-          wrangler pages deploy dist \
+          npm install -g wrangler
+          wrangler pages deploy /tmp/deploy \
             --project-name=chinesename \
             --branch=production
         env:
