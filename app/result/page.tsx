@@ -57,7 +57,7 @@ export default function ResultPage() {
 
   const generateNames = async (data: FormData, more: boolean = false) => {
     try {
-      // Use Cloudflare Pages Function for API
+      // Call local API (handled by Cloudflare Workers)
       const apiUrl = "/api/generate";
 
       const response = await fetch(apiUrl, {
