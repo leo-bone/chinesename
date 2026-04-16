@@ -1,10 +1,6 @@
 // Cloudflare Pages Function - API for Chinese Name Generator
 
-interface Env {
-  DEEPSEEK_API_KEY: string;
-}
-
-export const onRequest: PagesFunction<Env> = async (context) => {
+export const onRequest: PagesFunction = async (context) => {
   const { request, env } = context;
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -28,12 +24,18 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   try {
     const data = await request.json();
 
+    // Get API key from environment
+    const apiKey = env.DEEPSEEK_API_KEY || env.DEEP_SEEK_API_KEY;
+    if (!apiKey) {
+      throw new Error('DEEPSEEK_API_KEY not configured');
+    }
+
     // Call DeepSeek API
     const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${env.DEEPSEEK_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model: 'deepseek-chat',
