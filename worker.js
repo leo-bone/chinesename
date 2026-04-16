@@ -2,6 +2,8 @@
 
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
+    
     // CORS headers
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
@@ -14,16 +16,28 @@ export default {
       return new Response(null, { headers: corsHeaders });
     }
 
-    // Only allow POST
-    if (request.method !== 'POST') {
-      return new Response('Method not allowed', { 
-        status: 405, 
-        headers: corsHeaders 
-      });
+    // Route: /api/generate
+    if (url.pathname === '/api/generate' || url.pathname === '/api/generate/') {
+      if (request.method !== 'POST') {
+        return new Response('Method not allowed', { 
+          status: 405, 
+          headers: corsHeaders 
+        });
+      }
+      return handleGenerate(request, env, corsHeaders);
     }
 
-    try {
-      const data = await request.json();
+    // Default: 404
+    return new Response('Not Found', { 
+      status: 404, 
+      headers: corsHeaders 
+    });
+  },
+};
+
+async function handleGenerate(request, env, corsHeaders) {
+  try {
+    const data = await request.json();
       
       // Call DeepSeek API
       const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
@@ -159,5 +173,4 @@ export default {
         },
       });
     }
-  },
-};
+  }
