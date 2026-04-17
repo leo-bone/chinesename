@@ -39,13 +39,26 @@ export default function ResultPage() {
   }, []);
 
   const generateNames = async (data: FormData, more: boolean = false) => {
-    // Skip API call - use client-side generation directly
-    // Worker is currently unavailable (503 error)
-    const fallbackNames = generateNamesClientSide(data, more);
-    setNames(fallbackNames);
-    setIsLoading(false);
-    setIsRegenerating(false);
-    setIsGeneratingMore(false);
+    console.log("[DEBUG] generateNames called", { more, englishName: data.englishName });
+    
+    try {
+      // Skip API call - use client-side generation directly
+      // Worker is currently unavailable (503 error)
+      console.log("[DEBUG] Starting client-side generation...");
+      const fallbackNames = generateNamesClientSide(data, more);
+      console.log("[DEBUG] Generated names:", fallbackNames.length, fallbackNames);
+      
+      setNames(fallbackNames);
+      console.log("[DEBUG] Names set to state");
+    } catch (err) {
+      console.error("[DEBUG] Error in generateNames:", err);
+      setError("Failed to generate names. Please try again.");
+    } finally {
+      console.log("[DEBUG] Setting loading states to false");
+      setIsLoading(false);
+      setIsRegenerating(false);
+      setIsGeneratingMore(false);
+    }
   };
 
   // Client-side name generation using the optimized algorithm (synchronous)
