@@ -38,25 +38,34 @@ export default function ResultPage() {
     }
   }, []);
 
-  const generateNames = (data: FormData, more: boolean = false) => {
+  const generateNames = async (data: FormData, more: boolean = false) => {
     try {
-      // Use client-side generation directly (synchronous)
-      const names = generateNamesClientSide(data, more);
-      setNames(names);
+      // Try Pages Functions API first (same domain)
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, more }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setNames(result.names);
+      } else {
+        // Fallback to client-side generation
+        console.log("API failed, using client-side fallback");
+        const names = generateChineseNames(data, more);
+        setNames(names);
+      }
     } catch (err) {
       console.error("Error generating names:", err);
-      setError("Failed to generate names. Please try again.");
+      // Fallback to client-side generation on network error
+      const names = generateChineseNames(data, more);
+      setNames(names);
     } finally {
       setIsLoading(false);
       setIsRegenerating(false);
       setIsGeneratingMore(false);
     }
-  };
-
-  // Client-side name generation using the optimized algorithm (synchronous)
-  const generateNamesClientSide = (data: FormData, more: boolean): ChineseName[] => {
-    // Use the new smart name generator
-    return generateChineseNames(data, more);
   };
 
   const handleRegenerate = () => {
