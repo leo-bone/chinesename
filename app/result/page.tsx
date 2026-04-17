@@ -40,16 +40,20 @@ export default function ResultPage() {
 
   const generateNames = async (data: FormData, more: boolean = false) => {
     try {
-      // Call Cloudflare Worker API
-      // In production, this should be your Worker URL
-      // For now, we'll use a relative path that will be handled by Cloudflare routing
+      // Call Cloudflare Worker API with timeout
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://chinesename-api.57990177.workers.dev/api/generate";
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
 
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...data, more }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -59,22 +63,20 @@ export default function ResultPage() {
       const result = await response.json();
       const generatedNames = result.names || [];
       setNames(generatedNames);
-      setIsLoading(false);
-      setIsRegenerating(false);
-      setIsGeneratingMore(false);
     } catch (err) {
       console.error("Error generating names:", err);
-      // Fallback to client-side generation
-      const names = await generateNamesClientSide(data, more);
-      setNames(names);
+      // Fallback to client-side generation immediately
+      const fallbackNames = generateNamesClientSide(data, more);
+      setNames(fallbackNames);
+    } finally {
       setIsLoading(false);
       setIsRegenerating(false);
       setIsGeneratingMore(false);
     }
   };
 
-  // Client-side name generation using the optimized algorithm
-  const generateNamesClientSide = async (data: FormData, more: boolean): Promise<ChineseName[]> => {
+  // Client-side name generation using the optimized algorithm (synchronous)
+  const generateNamesClientSide = (data: FormData, more: boolean): ChineseName[] => {
     // Use the new smart name generator
     return generateChineseNames(data, more);
   };
