@@ -2,6 +2,8 @@
 name = "chinesename-api"
 main = "api/generate.js"
 compatibility_date = "2024-01-01"
+account_id = "72450e08e207045ce0dc313447dcb5e3"
 
 [vars]
 # Environment variables will be set via GitHub Actions secrets
+DEEPSEEK_API_KEY = "sk-f3a3cddb73e147949b42fd2747f3c082"
