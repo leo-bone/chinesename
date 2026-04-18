@@ -438,93 +438,105 @@ const firstLetterPhoneticMap: Record<string, ChineseName> = {
   "Z": { characters: "泽", pinyin: "Zé", meaning: "Grace, pool · 恩泽", source: "Phonetic starting with Z · Z音开头", personalityMatch: "Captures your graceful and beneficent nature" },
 };
 
-// ==================== 扩展的传统名字库 ====================
+// ==================== 扩展的传统名字库（精选高质量名字）====================
 const traditionalNameDatabase = {
   male: [
-    // 文雅书生型
+    // 文雅书生型 · Scholarly & Refined
     { characters: "子轩", pinyin: "Zǐ Xuān", meaning: "Son of nobility · 子之轩昂", source: "Classical literature · 经典文学", personalityMatch: "Conveys dignity and scholarly grace · 传达尊严与学者风范" },
     { characters: "文博", pinyin: "Wén Bó", meaning: "Cultured and learned · 文采博学", source: "Confucian tradition · 儒家传统", personalityMatch: "Shows literary excellence and wisdom · 展现文学才华与智慧" },
-    { characters: "修杰", pinyin: "Xiū Jié", meaning: "Cultivated excellence · 修身杰士", source: "Classical cultivation · 修身之道", personalityMatch: "Demonstrates self-improvement and nobility · 体现自我提升与高尚" },
     { characters: "书涵", pinyin: "Shū Hán", meaning: "Book cultivation · 书香涵养", source: "Scholarly tradition · 学者传统", personalityMatch: "Embodies knowledge and refinement · 体现知识与修养" },
     { characters: "墨轩", pinyin: "Mò Xuān", meaning: "Ink pavilion · 墨香轩窗", source: "Literary tradition · 文人传统", personalityMatch: "Reflects artistic and scholarly temperament · 反映艺术与学者气质" },
+    { characters: "修远", pinyin: "Xiū Yuǎn", meaning: "Cultivated far-reaching · 修身向远", source: "Qu Yuan · 《楚辞》'路漫漫其修远兮'", personalityMatch: "The spirit that never stops seeking, no matter how long the journey · 永不停止追求的精神" },
+    { characters: "文渊", pinyin: "Wén Yuān", meaning: "Profound culture · 文学渊博", source: "Ming Dynasty Imperial Archive · 明代文渊阁", personalityMatch: "Deep and expansive like a literary ocean · 深邃广博如文海" },
+    { characters: "博远", pinyin: "Bó Yuǎn", meaning: "Broad and far-sighted · 博学远见", source: "Confucian ideal · 儒家理想", personalityMatch: "Broad knowledge with forward vision · 知识渊博，目光远大" },
     
-    // 大气豪迈型
-    { characters: "浩然", pinyin: "Hào Rán", meaning: "Vast and righteous · 浩然正气", source: "Mencius · 《孟子》", personalityMatch: "Embodies grand moral character · 体现宏大道德品格" },
-    { characters: "天翔", pinyin: "Tiān Xiáng", meaning: "Soaring sky · 天翔云游", source: "Classical imagery · 古典意象", personalityMatch: "Shows ambition and freedom · 展现抱负与自由" },
-    { characters: "鹏程", pinyin: "Péng Chéng", meaning: "Roc journey · 鹏程万里", source: "Zhuangzi · 《庄子》", personalityMatch: "Symbolizes great ambition and success · 象征远大抱负与成功" },
-    { characters: "云飞", pinyin: "Yún Fēi", meaning: "Cloud flying · 云飞风扬", source: "Tang poetry · 唐诗", personalityMatch: "Represents freedom and aspiration · 代表自由与志向" },
-    { characters: "海川", pinyin: "Hǎi Chuān", meaning: "Sea and river · 海纳百川", source: "Classical wisdom · 古典智慧", personalityMatch: "Shows包容 and magnanimity · 展现包容与宽宏" },
+    // 大气豪迈型 · Grand & Ambitious
+    { characters: "浩然", pinyin: "Hào Rán", meaning: "Vast righteous spirit · 浩然正气", source: "Mencius · 《孟子》'我善养吾浩然之气'", personalityMatch: "Embodies the grand moral spirit of the universe · 体现宇宙浩然正气" },
+    { characters: "天翔", pinyin: "Tiān Xiáng", meaning: "Soaring to the sky · 凌云天翔", source: "Classical imagery · 古典意象", personalityMatch: "Shows boundless ambition and freedom · 展现无边抱负与自由" },
+    { characters: "鹏程", pinyin: "Péng Chéng", meaning: "Roc's mighty journey · 鹏程万里", source: "Zhuangzi · 《庄子·逍遥游》", personalityMatch: "Symbolizes great ambition — the roc soars ninety thousand li · 象征远大志向，鹏飞九万里" },
+    { characters: "海川", pinyin: "Hǎi Chuān", meaning: "Sea embracing all rivers · 海纳百川", source: "Ancient wisdom · 古典智慧", personalityMatch: "The sea accepts all streams — inclusive and magnificent · 大海纳百川，宽广包容" },
+    { characters: "长风", pinyin: "Cháng Fēng", meaning: "Enduring wind · 长风破浪", source: "Li Bai · 李白《行路难》'长风破浪会有时'", personalityMatch: "One day the wind will come and break through the waves · 终有乘风破浪时" },
+    { characters: "志远", pinyin: "Zhì Yuǎn", meaning: "Aspirations soaring far · 志存高远", source: "Zhuge Liang · 诸葛亮《诫子书》", personalityMatch: "The ambitious spirit that always aims beyond the horizon · 志向高远，永不停步" },
+    { characters: "凌云", pinyin: "Líng Yún", meaning: "Rising above the clouds · 凌云壮志", source: "Du Fu · 杜甫《初上凤凰台》", personalityMatch: "Towering ambitions that pierce the clouds · 雄心壮志，直插云霄" },
     
-    // 智慧深邃型
-    { characters: "睿渊", pinyin: "Ruì Yuān", meaning: "Wise and profound · 睿智渊博", source: "Ancient wisdom texts · 古籍智慧", personalityMatch: "Reflects deep intelligence · 反映深邃智慧" },
-    { characters: "明哲", pinyin: "Míng Zhé", meaning: "Bright and wise · 明哲保身", source: "Book of Songs · 《诗经》", personalityMatch: "Shows wisdom and discernment · 展现智慧与洞察力" },
-    { characters: "思远", pinyin: "Sī Yuǎn", meaning: "Thoughtful and far-seeing · 思远虑深", source: "Philosophical texts · 哲学典籍", personalityMatch: "Deep thinker with vision · 深思熟虑的远见者" },
-    { characters: "智宸", pinyin: "Zhì Chén", meaning: "Wisdom imperial · 智慧宸宇", source: "Classical combination · 古典组合", personalityMatch: "Embodies wisdom and nobility · 体现智慧与高貴" },
-    { characters: "明辉", pinyin: "Míng Huī", meaning: "Bright radiance · 明辉璀璨", source: "Tang Dynasty poetry · 唐诗", personalityMatch: "Shines with inner light and wisdom · 内心光芒与智慧闪耀" },
+    // 智慧深邃型 · Wise & Profound
+    { characters: "睿渊", pinyin: "Ruì Yuān", meaning: "Wise and profound · 睿智渊博", source: "Ancient wisdom texts · 古籍智慧", personalityMatch: "Deep intelligence that sees beyond the surface · 洞察本质的深邃智慧" },
+    { characters: "明哲", pinyin: "Míng Zhé", meaning: "Brilliant and wise · 明智哲思", source: "Book of Songs · 《诗经》'既明且哲，以保其身'", personalityMatch: "Wisdom that illuminates the path ahead · 智慧照亮前路" },
+    { characters: "智宸", pinyin: "Zhì Chén", meaning: "Wisdom of the cosmos · 智慧宸宇", source: "Classical combination · 古典组合", personalityMatch: "Wisdom as vast as the heavens · 智慧如宸宇般广博" },
+    { characters: "哲思", pinyin: "Zhé Sī", meaning: "Philosophical thought · 哲学思考", source: "Philosophical tradition · 哲学传统", personalityMatch: "A mind that questions and seeks truth · 探寻真理的哲思之心" },
+    { characters: "慎思", pinyin: "Shèn Sī", meaning: "Careful thoughtfulness · 慎思明辨", source: "The Doctrine of the Mean · 《中庸》'博学之，审问之，慎思之'", personalityMatch: "Careful in reflection, clear in judgement · 思虑周全，明辨是非" },
     
-    // 品德高尚型
-    { characters: "泽楷", pinyin: "Zé Kǎi", meaning: "Graceful model · 泽被楷模", source: "Confucian tradition · 儒家传统", personalityMatch: "Exemplifies virtuous conduct · 示范美德行为" },
-    { characters: "德明", pinyin: "Dé Míng", meaning: "Virtue bright · 德明行正", source: "Moral tradition · 道德传统", personalityMatch: "Shows moral clarity and integrity · 展现道德清明与正直" },
-    { characters: "仁杰", pinyin: "Rén Jié", meaning: "Benevolent hero · 仁德杰出", source: "Confucian virtue · 儒家美德", personalityMatch: "Combines kindness with excellence · 结合善良与卓越" },
-    { characters: "义轩", pinyin: "Yì Xuān", meaning: "Righteous pavilion · 义薄云天", source: "Classical virtue · 古典美德", personalityMatch: "Embodies righteousness and nobility · 体现正义与高尚" },
-    { characters: "信然", pinyin: "Xìn Rán", meaning: "Trustworthy and natural · 信然如一", source: "Confucian value · 儒家价值", personalityMatch: "Shows honesty and authenticity · 展现诚实与真实" },
+    // 品德高尚型 · Virtuous & Noble
+    { characters: "浩德", pinyin: "Hào Dé", meaning: "Vast virtue · 浩然之德", source: "Confucian canon · 儒家经典", personalityMatch: "Virtue as vast and pure as the open sky · 道德广博纯正如青天" },
+    { characters: "仁杰", pinyin: "Rén Jié", meaning: "Benevolent excellence · 仁德杰出", source: "Confucian virtue · 儒家美德", personalityMatch: "Combines benevolence with outstanding character · 仁慈与卓越并存" },
+    { characters: "弘毅", pinyin: "Hóng Yì", meaning: "Magnanimous and resolute · 弘毅宽厚", source: "Analects · 《论语》'士不可以不弘毅'", personalityMatch: "The scholar must be broad-minded and strong-willed · 胸怀宽广，意志坚定" },
+    { characters: "君子", pinyin: "Jūn Zǐ", meaning: "Gentleman of virtue · 君子之风", source: "Analects · 《论语》", personalityMatch: "The Confucian ideal of a virtuous, cultured person · 儒家理想中的君子人格" },
+    { characters: "德辉", pinyin: "Dé Huī", meaning: "Virtue's radiance · 德行光辉", source: "Moral tradition · 道德传统", personalityMatch: "Character that shines with moral brilliance · 品德光辉照耀" },
     
-    // 俊朗英武型
-    { characters: "俊熙", pinyin: "Jùn Xī", meaning: "Talented and bright · 俊朗熙和", source: "Classical poetry · 古典诗词", personalityMatch: "Radiates talent and optimism · 散发才华与乐观" },
-    { characters: "英杰", pinyin: "Yīng Jié", meaning: "Heroic excellence · 英雄杰出", source: "Classical ideal · 古典理想", personalityMatch: "Embodies heroism and excellence · 体现英雄主义与卓越" },
-    { characters: "伟宸", pinyin: "Wěi Chén", meaning: "Great imperial · 伟岸宸宇", source: "Classical combination · 古典组合", personalityMatch: "Shows greatness and dignity · 展现伟大与尊严" },
-    { characters: "弘毅", pinyin: "Hóng Yì", meaning: "Great perseverance · 弘毅宽厚", source: "Analects · 《论语》", personalityMatch: "Demonstrates strength and determination · 展现力量与决心" },
-    { characters: "峻熙", pinyin: "Jùn Xī", meaning: "Lofty brightness · 峻熙明朗", source: "Classical imagery · 古典意象", personalityMatch: "Combines majesty with warmth · 结合威严与温暖" },
+    // 意境深远型 · Poetic & Evocative
+    { characters: "锦程", pinyin: "Jǐn Chéng", meaning: "Brocade journey · 锦绣前程", source: "Classical blessing · 古典祝福", personalityMatch: "A brilliant and colorful future awaits · 锦绣前程，无限可能" },
+    { characters: "承泽", pinyin: "Chéng Zé", meaning: "Inheriting blessings · 承受恩泽", source: "Classical heritage · 古典传承", personalityMatch: "One who carries forward the blessings of generations past · 传承前人恩泽" },
+    { characters: "宇恒", pinyin: "Yǔ Héng", meaning: "Universal permanence · 宇宙恒久", source: "Astronomical imagery · 天文意象", personalityMatch: "As enduring and steadfast as the universe itself · 如宇宙般永恒坚定" },
+    { characters: "澄怀", pinyin: "Chéng Huái", meaning: "Pure heart · 澄怀观道", source: "Zong Bing · 宗炳《画山水序》", personalityMatch: "A pure heart that perceives the Tao in all things · 纯净之心，感悟万道" },
+    { characters: "云鹤", pinyin: "Yún Hè", meaning: "Cloud crane · 云中仙鹤", source: "Taoist imagery · 道家意象", personalityMatch: "Free and transcendent as a crane gliding through clouds · 如云中仙鹤般超脱自在" },
   ],
   
   female: [
-    // 温婉优雅型
-    { characters: "雅琪", pinyin: "Yǎ Qí", meaning: "Elegant jade · 雅致琪玉", source: "Classical feminine ideal · 古典女性美", personalityMatch: "Radiates refined beauty and grace · 散发精致美与优雅" },
-    { characters: "诗涵", pinyin: "Shī Hán", meaning: "Poetic grace · 诗意涵养", source: "Tang poetry tradition · 唐诗传统", personalityMatch: "Embodies artistic elegance and depth · 体现艺术优雅与深度" },
-    { characters: "若曦", pinyin: "Ruò Xī", meaning: "Like morning light · 若曦晨光", source: "Classical imagery · 古典意象", personalityMatch: "Gentle as dawn, warm and bright · 温柔如晨曦，温暖明亮" },
-    { characters: "婉清", pinyin: "Wǎn Qīng", meaning: "Graceful and clear · 婉约清丽", source: "Song poetry · 宋词", personalityMatch: "Shows elegance and purity · 展现优雅与纯洁" },
-    { characters: "静姝", pinyin: "Jìng Shū", meaning: "Quiet and beautiful · 静女其姝", source: "Book of Songs · 《诗经》", personalityMatch: "Embodies quiet beauty and grace · 体现静谧之美" },
+    // 温婉优雅型 · Gentle & Elegant
+    { characters: "若兰", pinyin: "Ruò Lán", meaning: "Like an orchid · 若兰芳馥", source: "Qu Yuan · 《楚辞》'纫秋兰以为佩'", personalityMatch: "Pure and fragrant as an orchid in the valley · 幽谷兰花，芳洁纯美" },
+    { characters: "诗涵", pinyin: "Shī Hán", meaning: "Poetic grace · 诗意涵养", source: "Tang poetry tradition · 唐诗传统", personalityMatch: "Carries the depth and beauty of classical poetry · 蕴含古典诗词的深度与美" },
+    { characters: "婉清", pinyin: "Wǎn Qīng", meaning: "Graceful and pure · 婉约清丽", source: "Song Dynasty Ci poetry · 宋词", personalityMatch: "Elegant as a Song dynasty ci poem, clear as still water · 宛如宋词，清如静水" },
+    { characters: "静姝", pinyin: "Jìng Shū", meaning: "Quiet and beautiful · 静女其姝", source: "Book of Songs · 《诗经·静女》", personalityMatch: "The quiet beauty that shines most brilliantly in stillness · 静中光华，最为动人" },
+    { characters: "雅韵", pinyin: "Yǎ Yùn", meaning: "Elegant rhythm · 雅致韵味", source: "Classical music tradition · 古典音乐传统", personalityMatch: "Graceful like classical music — every note resonates with elegance · 如古典音乐，每个音符都优雅共鸣" },
+    { characters: "清婉", pinyin: "Qīng Wǎn", meaning: "Pure and graceful · 清丽婉约", source: "Classical feminine ideal · 古典女性美", personalityMatch: "Clear-hearted and gently graceful · 心思清澈，举止婉约" },
+    { characters: "幽兰", pinyin: "Yōu Lán", meaning: "Hidden orchid · 幽谷空兰", source: "Confucius · 孔子'芷兰生于深林，不以无人而不芳'", personalityMatch: "Flourishes with inner virtue regardless of recognition · 不因无人赏而不芳" },
     
-    // 灵动活泼型
-    { characters: "雨萱", pinyin: "Yǔ Xuān", meaning: "Rain lily · 雨润萱草", source: "Nature poetry · 自然诗词", personalityMatch: "Fresh and nurturing spirit · 清新滋养的精神" },
-    { characters: "梦琪", pinyin: "Mèng Qí", meaning: "Dream jade · 梦幻琪玉", source: "Romantic poetry · 浪漫诗词", personalityMatch: "Carries dreamy elegance and wonder · 承载梦幻优雅与惊奇" },
-    { characters: "灵韵", pinyin: "Líng Yùn", meaning: "Spiritual charm · 灵动韵味", source: "Artistic tradition · 艺术传统", personalityMatch: "Shows lively and artistic temperament · 展现活泼艺术气质" },
-    { characters: "晓萱", pinyin: "Xiǎo Xuān", meaning: "Dawn lily · 晓露萱花", source: "Classical imagery · 古典意象", personalityMatch: "Bright and fresh like morning dew · 明亮清新如晨露" },
-    { characters: "语嫣", pinyin: "Yǔ Yān", meaning: "Charming speech · 语笑嫣然", source: "Jin Yong novel · 金庸小说", personalityMatch: "Embodies charm and eloquence · 体现魅力与口才" },
+    // 灵动活泼型 · Lively & Vibrant
+    { characters: "雨萱", pinyin: "Yǔ Xuān", meaning: "Rain-nurtured lily · 雨润萱草", source: "Nature poetry · 自然诗词", personalityMatch: "Fresh and life-giving as rain on day lilies · 如雨润萱草，清新生机" },
+    { characters: "飞燕", pinyin: "Fēi Yàn", meaning: "Flying swallow · 燕飞春来", source: "Classical poetry · 古典诗词", personalityMatch: "Swift, graceful and full of spring's energy · 轻盈灵动，充满春的活力" },
+    { characters: "灵韵", pinyin: "Líng Yùn", meaning: "Spiritual melody · 灵动韵味", source: "Artistic tradition · 艺术传统", personalityMatch: "Alive with artistic spirit and natural rhythm · 充满艺术灵气与自然韵律" },
+    { characters: "沐晨", pinyin: "Mù Chén", meaning: "Bathed in dawn · 沐浴晨光", source: "Nature imagery · 自然意象", personalityMatch: "Radiates the freshness and hope of morning light · 散发清晨阳光般的清新与希望" },
+    { characters: "妙音", pinyin: "Miào Yīn", meaning: "Wondrous music · 妙音天籁", source: "Buddhist tradition · 佛教传统", personalityMatch: "A voice and presence as beautiful as heavenly music · 如天籁妙音般美好" },
     
-    // 聪慧知性型
-    { characters: "思颖", pinyin: "Sī Yǐng", meaning: "Thoughtful excellence · 思颖慧心", source: "Scholarly tradition · 学者传统", personalityMatch: "Shows intelligent grace and wisdom · 展现聪慧优雅与智慧" },
-    { characters: "睿婕", pinyin: "Ruì Jié", meaning: "Wise and graceful · 睿智婕妤", source: "Classical combination · 古典组合", personalityMatch: "Combines wisdom with elegance · 结合智慧与优雅" },
-    { characters: "书瑶", pinyin: "Shū Yáo", meaning: "Book jade · 书卷瑶华", source: "Literary tradition · 文学传统", personalityMatch: "Embodies knowledge and beauty · 体现知识与美" },
-    { characters: "慧琳", pinyin: "Huì Lín", meaning: "Wise jade · 慧心琳琅", source: "Wisdom tradition · 智慧传统", personalityMatch: "Shows wisdom and preciousness · 展现智慧与珍贵" },
-    { characters: "智美", pinyin: "Zhì Měi", meaning: "Wise and beautiful · 智美双全", source: "Modern classical · 现代古典", personalityMatch: "Combines intelligence with beauty · 结合智慧与美貌" },
+    // 聪慧知性型 · Intelligent & Thoughtful
+    { characters: "思颖", pinyin: "Sī Yǐng", meaning: "Thoughtful brilliance · 思辨颖悟", source: "Scholarly tradition · 学者传统", personalityMatch: "Sharp intellect with elegant insight · 思维敏锐，优雅洞察" },
+    { characters: "慧心", pinyin: "Huì Xīn", meaning: "Wise heart · 慧心妙解", source: "Buddhist wisdom · 佛教智慧", personalityMatch: "The heart that sees what others miss · 洞察他人所不见的慧心" },
+    { characters: "知微", pinyin: "Zhī Wēi", meaning: "Perceiving subtleties · 知微见著", source: "I Ching · 《易经》", personalityMatch: "Sees the profound in the subtle, the great in the small · 见微知著，洞察入微" },
+    { characters: "睿涵", pinyin: "Ruì Hán", meaning: "Wise and cultivated · 睿智涵养", source: "Classical combination · 古典组合", personalityMatch: "Wisdom that is deep and quietly cultivated · 深沉而安静地培养的智慧" },
+    { characters: "明思", pinyin: "Míng Sī", meaning: "Brilliant thinking · 明净思维", source: "Philosophical ideal · 哲学理想", personalityMatch: "Clear mind, brilliant thought · 头脑清晰，思维明敏" },
     
-    // 甜美可人型
-    { characters: "欣怡", pinyin: "Xīn Yí", meaning: "Joyful harmony · 欣悦怡然", source: "Classical blessings · 古典祝福", personalityMatch: "Brings happiness and peace · 带来快乐与平和" },
-    { characters: "佳怡", pinyin: "Jiā Yí", meaning: "Beautiful harmony · 佳期怡悦", source: "Traditional virtues · 传统美德", personalityMatch: "Radiates pleasant charm and joy · 散发愉悦魅力与快乐" },
-    { characters: "甜甜", pinyin: "Tián Tián", meaning: "Sweet sweet · 甜甜蜜蜜", source: "Modern affectionate · 现代亲昵", personalityMatch: "Embodies sweetness and warmth · 体现甜蜜与温暖" },
-    { characters: "美琳", pinyin: "Měi Lín", meaning: "Beautiful jade · 美丽琳琅", source: "Classical beauty · 古典美", personalityMatch: "Shows beauty and preciousness · 展现美与珍贵" },
-    { characters: "可馨", pinyin: "Kě Xīn", meaning: "Adorable fragrance · 可人馨香", source: "Modern classical · 现代古典", personalityMatch: "Sweet and charming presence · 甜美迷人的存在" },
+    // 诗意美好型 · Poetic & Beautiful
+    { characters: "云舒", pinyin: "Yún Shū", meaning: "Clouds unfurling · 白云舒卷", source: "Tao Yuanming · 陶渊明'云无心以出岫'", personalityMatch: "Free and natural as clouds drifting without purpose · 自然自在，如云无心" },
+    { characters: "芷若", pinyin: "Zhǐ Ruò", meaning: "Angelica fragrance · 芷若芳菲", source: "Jin Yong · 金庸《倚天屠龙记》赵敏之名", personalityMatch: "Pure fragrance of mountain herbs — wild and graceful · 山草芬芳，野性优雅" },
+    { characters: "晚晴", pinyin: "Wǎn Qíng", meaning: "Evening's clarity · 晚晴温柔", source: "Li Shangyin · 李商隐《晚晴》", personalityMatch: "The serene beauty that emerges after the storm passes · 风雨后晚晴的宁静之美" },
+    { characters: "月盈", pinyin: "Yuè Yíng", meaning: "Full moon · 月满盈盈", source: "Astronomical poetry · 天文诗词", personalityMatch: "Complete and luminous as a full moon · 如满月般圆满明亮" },
+    { characters: "烟雨", pinyin: "Yān Yǔ", meaning: "Misty rain · 烟雨朦胧", source: "Su Shi · 苏轼'烟雨中'", personalityMatch: "Mysterious and beautiful as rain-misted mountains · 如烟雨江南般朦胧美丽" },
     
-    // 大气端庄型
-    { characters: "雅婷", pinyin: "Yǎ Tíng", meaning: "Elegant graceful · 雅致婷婷", source: "Classical elegance · 古典优雅", personalityMatch: "Shows dignity and refinement · 展现尊严与精致" },
-    { characters: "丽华", pinyin: "Lì Huá", meaning: "Beautiful splendor · 丽华璀璨", source: "Historical name · 历史名讳", personalityMatch: "Embodies beauty and magnificence · 体现美与华丽" },
-    { characters: "婷婷", pinyin: "Tíng Tíng", meaning: "Graceful and tall · 婷婷玉立", source: "Classical description · 古典描写", personalityMatch: "Shows elegance and poise · 展现优雅与镇定" },
-    { characters: "淑华", pinyin: "Shū Huá", meaning: "Virtuous splendor · 淑女华彩", source: "Virtue tradition · 美德传统", personalityMatch: "Combines virtue with beauty · 结合美德与美" },
-    { characters: "婉仪", pinyin: "Wǎn Yí", meaning: "Graceful demeanor · 婉约仪容", source: "Classical etiquette · 古典礼仪", personalityMatch: "Embodies grace and propriety · 体现优雅与得体" },
+    // 大气端庄型 · Dignified & Gracious
+    { characters: "婉仪", pinyin: "Wǎn Yí", meaning: "Graceful deportment · 婉约仪范", source: "Classical etiquette · 古典礼仪", personalityMatch: "Embodies grace, propriety and inner dignity · 体现优雅、得体与内在尊严" },
+    { characters: "淑慧", pinyin: "Shū Huì", meaning: "Virtuous and wise · 淑德慧心", source: "Book of Songs · 《诗经》'淑德淑仪'", personalityMatch: "The rare combination of virtue and wisdom · 美德与智慧的珍贵结合" },
+    { characters: "华彩", pinyin: "Huá Cǎi", meaning: "Magnificent brilliance · 华彩绽放", source: "Musical term · 音乐术语", personalityMatch: "Brilliant and magnificent, like a cadenza in full bloom · 如华彩乐段般璀璨绽放" },
+    { characters: "凤仪", pinyin: "Fèng Yí", meaning: "Phoenix grace · 凤仪天下", source: "Historical name · 历史典故", personalityMatch: "The rare grace and nobility of a phoenix · 凤凰般稀有的优雅与尊贵" },
   ],
   
   neutral: [
-    { characters: "文轩", pinyin: "Wén Xuān", meaning: "Cultured pavilion · 文轩雅室", source: "Scholarly tradition · 学者传统", personalityMatch: "Shows intellectual depth and refinement · 展现知识深度与修养" },
-    { characters: "明远", pinyin: "Míng Yuǎn", meaning: "Bright and far-reaching · 明远志高", source: "Classical wisdom · 古典智慧", personalityMatch: "Visionary and clear-minded · 有远见且头脑清晰" },
-    { characters: "清扬", pinyin: "Qīng Yáng", meaning: "Clear and elevated · 清扬婉兮", source: "Book of Songs · 《诗经》", personalityMatch: "Pure and uplifting spirit · 纯洁振奋的精神" },
-    { characters: "云帆", pinyin: "Yún Fān", meaning: "Cloud sail · 云帆远航", source: "Li Bai poetry · 李白诗", personalityMatch: "Adventurous and aspirational spirit · 冒险与有志向的精神" },
-    { characters: "景行", pinyin: "Jǐng Xíng", meaning: "Noble conduct · 景行行止", source: "Book of Songs · 《诗经》", personalityMatch: "Exemplary behavior and high standards · 模范行为与高标准" },
-    { characters: "子墨", pinyin: "Zǐ Mò", meaning: "Child of ink · 子墨书香", source: "Literary tradition · 文学传统", personalityMatch: "Artistic and scholarly nature · 艺术与学者气质" },
-    { characters: "星辰", pinyin: "Xīng Chén", meaning: "Star and constellation · 星辰大海", source: "Classical imagery · 古典意象", personalityMatch: "Dreamy and aspirational nature · 梦幻与有志向的天性" },
-    { characters: "晨曦", pinyin: "Chén Xī", meaning: "Morning dawn · 晨曦微光", source: "Nature imagery · 自然意象", personalityMatch: "Fresh start and new hope · 新的开始与希望" },
-    { characters: "涵宇", pinyin: "Hán Yǔ", meaning: "Cultivate universe · 涵养宇宙", source: "Philosophical · 哲学意境", personalityMatch: "Broad-minded and cultivated · 心胸宽广且有修养" },
-    { characters: "逸飞", pinyin: "Yì Fēi", meaning: "Free flying · 逸兴遄飞", source: "Classical poetry · 古典诗词", personalityMatch: "Free-spirited and unrestrained · 自由奔放无拘无束" },
+    // 自然意境型 · Nature Inspired
+    { characters: "云帆", pinyin: "Yún Fān", meaning: "Cloud sail · 云帆远航", source: "Li Bai · 李白《行路难》'直挂云帆济沧海'", personalityMatch: "Set sail with cloud-white wings to cross the vast sea · 扬帆远航，横渡苍海" },
+    { characters: "星河", pinyin: "Xīng Hé", meaning: "Milky Way · 星河灿烂", source: "Classical astronomical poetry · 古典天文诗", personalityMatch: "Brilliant and limitless as the Milky Way · 如银河般灿烂无垠" },
+    { characters: "晨曦", pinyin: "Chén Xī", meaning: "First light of dawn · 晨曦微光", source: "Nature imagery · 自然意象", personalityMatch: "The quiet hope of a new beginning · 新开始的静谧希望" },
+    { characters: "清泉", pinyin: "Qīng Quán", meaning: "Clear spring · 清泉石上流", source: "Wang Wei · 王维《山居秋暝》", personalityMatch: "Pure and flowing like a mountain spring over stones · 如山间清泉般纯净流淌" },
+    { characters: "霁月", pinyin: "Jì Yuè", meaning: "Moon after rain · 霁月清光", source: "Su Shi · 苏轼《水调歌头》", personalityMatch: "Clear and serene as moonlight after the rain clears · 如霁后月光般清澈宁静" },
+    
+    // 哲学意境型 · Philosophical
+    { characters: "知行", pinyin: "Zhī Xíng", meaning: "Knowledge and action · 知行合一", source: "Wang Yangming · 王阳明'知行合一'", personalityMatch: "Unites knowledge and action into one — the highest ideal · 知行合一，最高境界" },
+    { characters: "致远", pinyin: "Zhì Yuǎn", meaning: "Reaching far · 致远求真", source: "Zhuge Liang · 诸葛亮《诫子书》'志当存高远'", personalityMatch: "Ambition that always reaches beyond the present horizon · 志向永远超越当下" },
+    { characters: "悠然", pinyin: "Yōu Rán", meaning: "Carefree serenity · 悠然自得", source: "Tao Yuanming · 陶渊明'采菊东篱下，悠然见南山'", personalityMatch: "The rare art of finding peace and joy in simplicity · 在简单中寻得宁静与快乐" },
+    { characters: "涵虚", pinyin: "Hán Xū", meaning: "Embracing emptiness · 涵虚若谷", source: "Laozi · 《道德经》'上善若水'", personalityMatch: "Deep enough to contain all things, humble as a valley · 深含万物，谦逊如谷" },
+    { characters: "逸飞", pinyin: "Yì Fēi", meaning: "Free and soaring · 逸兴遄飞", source: "Classical poetry · 古典诗词", personalityMatch: "Free-spirited, unrestrained, soaring beyond boundaries · 自由奔放，超越一切界限" },
+    
+    // 文化意象型 · Cultural Imagery
+    { characters: "琴声", pinyin: "Qín Shēng", meaning: "Sound of the qin · 琴声悠扬", source: "Classical music culture · 古典音乐文化", personalityMatch: "Like qin music — refined, timeless, deeply moving · 如琴声般精致、超越时间、动人心弦" },
+    { characters: "墨香", pinyin: "Mò Xiāng", meaning: "Fragrance of ink · 墨香四溢", source: "Calligraphy tradition · 书法传统", personalityMatch: "The lasting fragrance of cultured learning and art · 学问与艺术的持久芬芳" },
   ],
 };
 

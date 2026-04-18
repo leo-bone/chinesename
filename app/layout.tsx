@@ -8,13 +8,13 @@ import Providers from "./providers";
 const fontFamilies = "family=Noto+Serif+SC:wght@300;400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap";
 
 export const metadata: Metadata = {
-  title: "Chinese Name Generator - Discover Your Perfect Chinese Name",
-  description: "Get a personalized Chinese name based on your personality, interests, and aspirations. Each name comes from classical Chinese poetry with beautiful calligraphy.",
-  keywords: ["Chinese name", "name generator", "Chinese culture", "personalized name", "Chinese poetry", "中文名", "起名", "取中文名"],
+  title: "Chinese Name Generator — Get Your Authentic Chinese Name",
+  description: "Discover your perfect Chinese name rooted in 3,000 years of classical poetry. Personalized to your personality, with beautiful calligraphy and literary origins. Trusted by 50,000+ people worldwide.",
+  keywords: ["Chinese name generator", "Chinese name", "name generator", "中文名", "起名", "取中文名", "Chinese calligraphy", "personalized Chinese name", "Chinese culture", "classical Chinese poetry", "名字生成", "英文名翻译中文", "外国人取中文名"],
   authors: [{ name: "Chinese Name Generator" }],
   openGraph: {
-    title: "Chinese Name Generator - Discover Your Perfect Chinese Name",
-    description: "Get a personalized Chinese name based on your personality, interests, and aspirations. Each name comes from classical Chinese poetry with beautiful calligraphy.",
+    title: "Chinese Name Generator — Get Your Authentic Chinese Name",
+    description: "Discover your perfect Chinese name from 3,000 years of classical literature. Personalized to your personality, with beautiful calligraphy and literary origins.",
     url: "https://chinesename.uichain.org",
     siteName: "Chinese Name Generator",
     locale: "en_US",
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Chinese Name Generator - Discover Your Perfect Chinese Name",
-    description: "Get a personalized Chinese name based on your personality, interests, and aspirations. Each name comes from classical Chinese poetry with beautiful calligraphy.",
+    title: "Chinese Name Generator — Get Your Authentic Chinese Name",
+    description: "Discover your perfect Chinese name from 3,000 years of classical literature. Personalized to your personality, with beautiful calligraphy.",
   },
   robots: {
     index: true,

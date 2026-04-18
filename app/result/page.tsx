@@ -113,9 +113,19 @@ export default function ResultPage() {
     return (
       <div className="flex-1 flex flex-col items-center justify-center py-20 px-4">
         <div className="text-center">
-          <Loader2 className="h-16 w-16 animate-spin text-red-700 mx-auto mb-6" />
-          <h2 className="text-2xl font-bold text-stone-800 mb-2">Creating Your Chinese Names...</h2>
-          <p className="text-stone-600">Our AI is carefully crafting personalized names based on your unique traits</p>
+          <div className="relative mb-8">
+            <Loader2 className="h-16 w-16 animate-spin text-red-700 mx-auto" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-2xl">名</span>
+            </div>
+          </div>
+          <h2 className="text-2xl font-bold text-stone-800 mb-3">Crafting Your Chinese Name...</h2>
+          <p className="text-stone-500 max-w-xs mx-auto">Searching through 3,000 years of classical poetry and literature to find names that truly reflect you</p>
+          <div className="mt-6 flex items-center justify-center gap-2 text-sm text-stone-400">
+            <span className="animate-pulse">✦</span>
+            <span>Matching personality traits to classical characters</span>
+            <span className="animate-pulse">✦</span>
+          </div>
         </div>
       </div>
     );
@@ -145,14 +155,19 @@ export default function ResultPage() {
     <div className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="max-w-6xl mx-auto text-center mb-8">
-        <h1 className="text-4xl font-bold text-stone-800 mb-4">Your Chinese Names</h1>
-        <p className="text-lg text-stone-600">
-          Here are personalized Chinese names crafted just for you, {formData?.englishName}
+        <div className="inline-flex items-center gap-2 bg-red-50 border border-red-100 text-red-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+          <Sparkles className="w-3.5 h-3.5" />
+          Your names are ready, {formData?.englishName}!
+        </div>
+        <h1 className="text-4xl font-bold text-stone-800 mb-3">Your Chinese Names</h1>
+        <p className="text-stone-500 max-w-xl mx-auto">
+          Each name below is drawn from classical Chinese literature and matched to your unique character. 
+          Click any name to explore its calligraphy.
         </p>
         {proStatus.isPro && (
           <div className="inline-flex items-center gap-2 mt-4 bg-amber-50 text-amber-700 px-4 py-2 rounded-full text-sm font-medium">
             <Crown className="w-4 h-4" />
-            Pro Member - All {names.length} names unlocked
+            Pro Member — All {names.length} names unlocked
           </div>
         )}
         {/* Generate More Names Button (Pro Only) */}
@@ -176,7 +191,7 @@ export default function ResultPage() {
                 </>
               )}
             </Button>
-            <p className="text-xs text-stone-500 mt-2">Unlock even better names with our premium AI</p>
+            <p className="text-xs text-stone-500 mt-2">Unlock even more curated names</p>
           </div>
         )}
       </div>
@@ -252,26 +267,27 @@ export default function ResultPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Calligraphy Preview */}
-                    <div className="bg-stone-100 rounded-lg p-4">
-                      <p className="text-4xl font-bold text-center text-stone-800">
+                    <div className="bg-gradient-to-br from-stone-50 to-amber-50/30 rounded-lg p-5 text-center border border-stone-100">
+                      <p className="text-5xl font-bold text-stone-800 mb-2 leading-none" 
+                         style={{ fontFamily: "'Noto Serif SC', serif", letterSpacing: "0.1em" }}>
                         {name.characters}
                       </p>
-                      <p className="text-center text-red-700 mt-1">{name.pinyin}</p>
+                      <p className="text-red-600 font-medium tracking-widest text-sm">{name.pinyin}</p>
                     </div>
 
                     {/* Details */}
-                    <div className="space-y-2 text-sm">
-                      <div>
-                        <span className="font-semibold text-stone-700">Meaning: </span>
+                    <div className="space-y-2.5 text-sm">
+                      <div className="flex gap-2">
+                        <span className="font-semibold text-stone-700 shrink-0">Meaning</span>
                         <span className="text-stone-600">{name.meaning}</span>
                       </div>
-                      <div>
-                        <span className="font-semibold text-stone-700">Source: </span>
-                        <span className="text-stone-600 text-xs leading-relaxed block mt-1">{name.source}</span>
+                      <div className="bg-amber-50/60 rounded-md px-3 py-2 border-l-2 border-amber-300">
+                        <span className="text-xs text-amber-700 font-medium">Source: </span>
+                        <span className="text-stone-600 text-xs leading-relaxed">{name.source}</span>
                       </div>
-                      <div>
-                        <span className="font-semibold text-stone-700">Why It Fits You: </span>
-                        <span className="text-stone-600">{name.personalityMatch}</span>
+                      <div className="flex gap-2">
+                        <span className="font-semibold text-stone-700 shrink-0">Why it fits</span>
+                        <span className="text-stone-600 italic">{name.personalityMatch}</span>
                       </div>
                     </div>
                   </CardContent>

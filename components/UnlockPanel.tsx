@@ -114,16 +114,16 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
 
       <div className="space-y-3 mb-6">
         {[
-          "9 unique Chinese names",
-          "5 classic calligraphy styles",
-          "3 signature designs",
-          "Upload your photo for signature",
-          "Name story card (shareable)",
-          "Social media share pack",
+          { text: "9 unique Chinese names (vs 5 free)", highlight: true },
+          { text: "5 classic calligraphy styles", highlight: false },
+          { text: "4 personalized signature designs", highlight: false },
+          { text: "Upload your photo for signature", highlight: false },
+          { text: "Shareable name story card", highlight: false },
+          { text: "Social media share pack", highlight: false },
         ].map((feature, i) => (
-          <div key={i} className="flex items-center gap-2 text-sm text-stone-700">
-            <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
-            <span>{feature}</span>
+          <div key={i} className={`flex items-center gap-2 text-sm ${feature.highlight ? "text-amber-800 font-medium" : "text-stone-700"}`}>
+            <Check className={`w-4 h-4 flex-shrink-0 ${feature.highlight ? "text-amber-600" : "text-green-600"}`} />
+            <span>{feature.text}</span>
           </div>
         ))}
       </div>
@@ -131,9 +131,10 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
       <div className="bg-white rounded-lg p-4 mb-4 border border-stone-200">
         <div className="flex items-baseline justify-center gap-2">
           <span className="text-4xl font-bold text-red-700">¥9.9</span>
-          <span className="text-stone-500 line-through">¥29.9</span>
+          <span className="text-stone-400 line-through text-lg">¥29.9</span>
+          <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded">67% OFF</span>
         </div>
-        <p className="text-center text-sm text-stone-500 mt-1">Lifetime access</p>
+        <p className="text-center text-sm text-stone-500 mt-1">One-time · Lifetime access · No subscription</p>
       </div>
 
       <div className="space-y-3" id="unlock-section">
@@ -162,9 +163,9 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
       </div>
 
       <p className="text-xs text-stone-500 text-center mt-4">
-        Already purchased? Enter your code above.
+        Enter your unlock code above to activate Pro instantly.
         <br />
-        Contact us if you need a code.
+        <span className="text-stone-400">Need a code? Purchase at checkout or use a gift code.</span>
       </p>
     </div>
   );
