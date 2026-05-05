@@ -1,0 +1,30 @@
+{
+  "name": "Chinese Name Generator",
+  "short_name": "CN Name",
+  "description": "Discover your authentic Chinese name rooted in 3,000 years of classical poetry",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafaf9",
+  "theme_color": "#991b1b",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["lifestyle", "education", "utilities"],
+  "lang": "en",
+  "dir": "ltr"
+}
