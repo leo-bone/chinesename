@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Share2, RefreshCw, Copy, Check, Sparkles, Crown } from "lucide-react";
+import { Loader2, Share2, RefreshCw, Copy, Check, Sparkles, Crown, Heart } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { usePro } from "@/components/ProProvider";
@@ -24,6 +24,7 @@ export default function ResultPage() {
   const [error, setError] = useState("");
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [selectedNameIndex, setSelectedNameIndex] = useState(0);
+  const [favorites, setFavorites] = useState<number[]>([]);
   const { proStatus } = usePro();
 
   useEffect(() => {
@@ -35,6 +36,12 @@ export default function ResultPage() {
     } else {
       setError("No form data found. Please go back and fill out the form.");
       setIsLoading(false);
+    }
+    
+    // Load favorites from localStorage
+    const savedFavorites = localStorage.getItem("chineseNameFavorites");
+    if (savedFavorites) {
+      setFavorites(JSON.parse(savedFavorites));
     }
   }, []);
 
@@ -87,6 +94,20 @@ export default function ResultPage() {
     setCopiedIndex(index);
     toast.success("Name copied to clipboard!");
     setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
+  const toggleFavorite = (index: number) => {
+    const newFavorites = favorites.includes(index)
+      ? favorites.filter(i => i !== index)
+      : [...favorites, index];
+    setFavorites(newFavorites);
+    localStorage.setItem("chineseNameFavorites", JSON.stringify(newFavorites));
+    
+    if (!favorites.includes(index)) {
+      toast.success("Added to favorites!");
+    } else {
+      toast.success("Removed from favorites");
+    }
   };
 
   const handleShare = async () => {
@@ -206,28 +227,32 @@ export default function ResultPage() {
       {/* Main Content - Tabs */}
       <div className="max-w-6xl mx-auto">
         <Tabs defaultValue="names" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="names" className="text-sm sm:text-base">
-              <span className="hidden sm:inline">Names 名字 ({displayNames.length})</span>
-              <span className="sm:hidden">名字 ({displayNames.length})</span>
+          <TabsList className="grid w-full grid-cols-5 mb-8 h-auto min-h-[40px]">
+            <TabsTrigger value="names" className="text-xs sm:text-sm px-1 sm:px-3 py-2">
+              <span className="hidden sm:inline">Names ({displayNames.length})</span>
+              <span className="sm:hidden">名字</span>
             </TabsTrigger>
-            <TabsTrigger value="calligraphy" className="text-sm sm:text-base">
-              <span className="hidden sm:inline">Calligraphy 书法</span>
+            <TabsTrigger value="calligraphy" className="text-xs sm:text-sm px-1 sm:px-3 py-2">
+              <span className="hidden sm:inline">Calligraphy</span>
               <span className="sm:hidden">书法</span>
             </TabsTrigger>
-            <TabsTrigger value="signature" className="text-sm sm:text-base">
-              <span className="hidden sm:inline">Signature 签名</span>
+            <TabsTrigger value="signature" className="text-xs sm:text-sm px-1 sm:px-3 py-2">
+              <span className="hidden sm:inline">Signature</span>
               <span className="sm:hidden">签名</span>
             </TabsTrigger>
-            <TabsTrigger value="share" className="text-sm sm:text-base">
-              <span className="hidden sm:inline">Share 分享</span>
+            <TabsTrigger value="share" className="text-xs sm:text-sm px-1 sm:px-3 py-2">
+              <span className="hidden sm:inline">Share</span>
               <span className="sm:hidden">分享</span>
+            </TabsTrigger>
+            <TabsTrigger value="favorites" className="text-xs sm:text-sm px-1 sm:px-3 py-2">
+              <span className="hidden sm:inline">Favorites ({favorites.length})</span>
+              <span className="sm:hidden">收藏</span>
             </TabsTrigger>
           </TabsList>
 
           {/* Names Tab */}
           <TabsContent value="names">
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
               {displayNames.map((name, index) => (
                 <Card
                   key={index}
@@ -252,6 +277,19 @@ export default function ResultPage() {
                           size="icon"
                           onClick={(e) => {
                             e.stopPropagation();
+                            toggleFavorite(index);
+                          }}
+                          className="h-8 w-8"
+                        >
+                          <Heart 
+                            className={`h-4 w-4 ${favorites.includes(index) ? "fill-red-500 text-red-500" : ""}`} 
+                          />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => {
+                            e.stopPropagation();
                             handleCopyName(name, index);
                           }}
                           className="h-8 w-8"
@@ -267,8 +305,8 @@ export default function ResultPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Calligraphy Preview */}
-                    <div className="bg-gradient-to-br from-stone-50 to-amber-50/30 rounded-lg p-5 text-center border border-stone-100">
-                      <p className="text-5xl font-bold text-stone-800 mb-2 leading-none" 
+                    <div className="bg-gradient-to-br from-stone-50 to-amber-50/30 rounded-lg p-4 sm:p-5 text-center border border-stone-100">
+                      <p className="text-4xl sm:text-5xl font-bold text-stone-800 mb-2 leading-none" 
                          style={{ fontFamily: "'Noto Serif SC', serif", letterSpacing: "0.1em" }}>
                         {name.characters}
                       </p>
@@ -309,7 +347,7 @@ export default function ResultPage() {
                       className="bg-amber-600 hover:bg-amber-700 text-white"
                       onClick={() => document.getElementById("unlock-section")?.scrollIntoView({ behavior: "smooth" })}
                     >
-                      Unlock Pro ¥9.9
+                      Unlock Pro $9.99
                     </Button>
                   </CardContent>
                 </Card>
@@ -319,10 +357,10 @@ export default function ResultPage() {
 
           {/* Calligraphy Tab */}
           <TabsContent value="calligraphy">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold text-stone-800 mb-4">Select a Name</h3>
-                <div className="grid grid-cols-5 gap-2 mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+              <Card className="p-4 sm:p-6">
+                <h3 className="text-base sm:text-lg font-semibold text-stone-800 mb-3 sm:mb-4">Select a Name</h3>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-4 sm:mb-6">
                   {names.slice(0, freeNamesCount + (proStatus.isPro ? names.length - freeNamesCount : 0)).map((name, index) => (
                     <Button
                       key={index}
@@ -348,10 +386,10 @@ export default function ResultPage() {
                 )}
               </Card>
 
-              <Card className="p-6 bg-gradient-to-br from-amber-50 to-orange-50">
-                <h3 className="text-lg font-semibold text-stone-800 mb-2">5 Classic Calligraphy Styles</h3>
-                <p className="text-sm text-stone-600 mb-4">五种经典书法风格 · 5 Classic Styles</p>
-                <div className="space-y-3 text-sm text-stone-700 mb-6">
+              <Card className="p-4 sm:p-6 bg-gradient-to-br from-amber-50 to-orange-50">
+                <h3 className="text-base sm:text-lg font-semibold text-stone-800 mb-2">5 Classic Calligraphy Styles</h3>
+                <p className="text-xs sm:text-sm text-stone-600 mb-3 sm:mb-4">五种经典书法风格 · 5 Classic Styles</p>
+                <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm text-stone-700 mb-4 sm:mb-6">
                   <div className="flex items-center gap-2">
                     <span className="w-4 h-4 bg-green-100 rounded text-green-700 text-center text-xs font-bold">1</span>
                     <span>楷书 KaiShu · 颜真卿风格</span>
@@ -385,7 +423,7 @@ export default function ResultPage() {
                     onClick={() => document.getElementById("unlock-section")?.scrollIntoView({ behavior: "smooth" })}
                   >
                     <Crown className="w-4 h-4 mr-2" />
-                    Unlock All Styles - ¥9.9
+                    Unlock All Styles - $9.99
                   </Button>
                 )}
               </Card>
@@ -394,14 +432,14 @@ export default function ResultPage() {
 
           {/* Signature Tab */}
           <TabsContent value="signature">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               {selectedName && formData && (
                 <>
                   <SignatureDesigner
                     characters={selectedName.characters}
                     pinyin={selectedName.pinyin}
                   />
-                  <Card className="p-6">
+                  <Card className="p-4 sm:p-6">
                     <h3 className="text-lg font-semibold text-stone-800 mb-2">4 Signature Styles</h3>
                     <p className="text-sm text-stone-600 mb-4">四种签名风格 · 4 Signature Styles</p>
                     <div className="space-y-4">
@@ -459,7 +497,7 @@ export default function ResultPage() {
 
           {/* Share Tab */}
           <TabsContent value="share">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               {selectedName && (
                 <>
                   <SocialSharePack name={selectedName} />
@@ -467,6 +505,92 @@ export default function ResultPage() {
                 </>
               )}
             </div>
+          </TabsContent>
+
+          {/* Favorites Tab */}
+          <TabsContent value="favorites">
+            {favorites.length === 0 ? (
+              <div className="text-center py-12 sm:py-16">
+                <Heart className="w-12 h-12 sm:w-16 sm:h-16 text-stone-300 mx-auto mb-4" />
+                <h3 className="text-lg sm:text-xl font-semibold text-stone-700 mb-2">No Favorites Yet</h3>
+                <p className="text-stone-500 max-w-md mx-auto mb-6 text-sm sm:text-base px-4">
+                  Click the heart icon on any name to save it here. Your favorites will be stored locally.
+                </p>
+                <Button 
+                  variant="outline" 
+                  onClick={() => document.querySelector('[value="names"]')?.dispatchEvent(new Event('click'))}
+                >
+                  Browse Names
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                {favorites.map((favIndex) => {
+                  const name = names[favIndex];
+                  if (!name) return null;
+                  return (
+                    <Card
+                      key={favIndex}
+                      className="bg-white/80 backdrop-blur-sm border-stone-200 shadow-lg overflow-hidden hover:shadow-xl transition-all"
+                    >
+                      <CardHeader className="pb-0">
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-lg text-stone-500">
+                            Option {favIndex + 1}
+                            <Heart className="inline-block w-4 h-4 ml-2 fill-red-500 text-red-500" />
+                          </CardTitle>
+                          <div className="flex gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => toggleFavorite(favIndex)}
+                              className="h-8 w-8"
+                            >
+                              <Heart className="h-4 w-4 fill-red-500 text-red-500" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleCopyName(name, favIndex)}
+                              className="h-8 w-8"
+                            >
+                              {copiedIndex === favIndex ? (
+                                <Check className="h-4 w-4 text-green-600" />
+                              ) : (
+                                <Copy className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="bg-gradient-to-br from-stone-50 to-amber-50/30 rounded-lg p-4 sm:p-5 text-center border border-stone-100">
+                          <p className="text-4xl sm:text-5xl font-bold text-stone-800 mb-2 leading-none" 
+                             style={{ fontFamily: "'Noto Serif SC', serif", letterSpacing: "0.1em" }}>
+                            {name.characters}
+                          </p>
+                          <p className="text-red-600 font-medium tracking-widest text-sm">{name.pinyin}</p>
+                        </div>
+                        <div className="space-y-2.5 text-sm">
+                          <div className="flex gap-2">
+                            <span className="font-semibold text-stone-700 shrink-0">Meaning</span>
+                            <span className="text-stone-600">{name.meaning}</span>
+                          </div>
+                          <div className="bg-amber-50/60 rounded-md px-3 py-2 border-l-2 border-amber-300">
+                            <span className="text-xs text-amber-700 font-medium">Source: </span>
+                            <span className="text-stone-600 text-xs leading-relaxed">{name.source}</span>
+                          </div>
+                          <div className="flex gap-2">
+                            <span className="font-semibold text-stone-700 shrink-0">Why it fits</span>
+                            <span className="text-stone-600 italic">{name.personalityMatch}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>

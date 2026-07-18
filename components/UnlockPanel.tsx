@@ -79,15 +79,18 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
             <Crown className="w-4 h-4 text-amber-600" />
             <span className="text-sm font-medium text-amber-800">Unlock Pro Features</span>
           </div>
-          <Button
-            size="sm"
-            className="bg-amber-600 hover:bg-amber-700 text-white"
-            onClick={() => {
-              document.getElementById("unlock-section")?.scrollIntoView({ behavior: "smooth" });
-            }}
+          <a
+            href="https://leobone.gumroad.com/l/chinesename-pro"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Unlock ¥9.9
-          </Button>
+            <Button
+              size="sm"
+              className="bg-amber-600 hover:bg-amber-700 text-white"
+            >
+              Unlock $9.99
+            </Button>
+          </a>
         </div>
       </div>
     );
@@ -130,14 +133,37 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
 
       <div className="bg-white rounded-lg p-4 mb-4 border border-stone-200">
         <div className="flex items-baseline justify-center gap-2">
-          <span className="text-4xl font-bold text-red-700">¥9.9</span>
-          <span className="text-stone-400 line-through text-lg">¥29.9</span>
+          <span className="text-4xl font-bold text-red-700">$9.99</span>
+          <span className="text-stone-400 line-through text-lg">$29.99</span>
           <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded">67% OFF</span>
         </div>
         <p className="text-center text-sm text-stone-500 mt-1">One-time · Lifetime access · No subscription</p>
       </div>
 
       <div className="space-y-3" id="unlock-section">
+        {/* Gumroad Purchase Button */}
+        <a
+          href="https://leobone.gumroad.com/l/chinesename-pro"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block"
+        >
+          <Button
+            className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-lg py-6"
+          >
+            <Crown className="w-5 h-5 mr-2" />
+            Buy Pro · $9.99
+          </Button>
+        </a>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 py-2">
+          <div className="flex-1 h-px bg-stone-200" />
+          <span className="text-xs text-stone-400">or use unlock code</span>
+          <div className="flex-1 h-px bg-stone-200" />
+        </div>
+
+        {/* Unlock Code Input */}
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
           <Input
@@ -154,18 +180,19 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
         </div>
         {error && <p className="text-sm text-red-600 text-center">{error}</p>}
         <Button
-          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold"
+          variant="outline"
+          className="w-full border-stone-300 text-stone-600 hover:bg-stone-50"
           onClick={handleUnlock}
           disabled={isUnlocking}
         >
-          {isUnlocking ? "Unlocking..." : "Unlock Pro Features"}
+          {isUnlocking ? "Unlocking..." : "Redeem Code"}
         </Button>
       </div>
 
       <p className="text-xs text-stone-500 text-center mt-4">
-        Enter your unlock code above to activate Pro instantly.
+        Purchase Pro access above to unlock all features instantly.
         <br />
-        <span className="text-stone-400">Need a code? Purchase at checkout or use a gift code.</span>
+        <span className="text-stone-400">Already have a code? Enter it above to redeem.</span>
       </p>
     </div>
   );

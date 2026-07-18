@@ -11,6 +11,7 @@ interface ProStatus {
 interface ProContextType {
   proStatus: ProStatus;
   unlock: (code: string) => boolean;
+  unlockByPurchase: (email: string) => void;
   lock: () => void;
   isCodeUsed: (code: string) => boolean;
 }
@@ -100,8 +101,34 @@ export function ProProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(PRO_STORAGE_KEY, JSON.stringify(newStatus));
   };
 
+  // Unlock Pro after successful Gumroad purchase
+  const unlockByPurchase = (email: string) => {
+    const newStatus: ProStatus = {
+      isPro: true,
+      unlockCode: `PURCHASED:${email}`,
+      unlockAt: Date.now(),
+    };
+    setProStatus(newStatus);
+    localStorage.setItem(PRO_STORAGE_KEY, JSON.stringify(newStatus));
+  };
+
+  // Check URL params for Gumroad redirect after payment
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const purchased = params.get("purchased");
+      const email = params.get("email");
+      if (purchased === "true" && email) {
+        unlockByPurchase(email);
+        // Clean URL
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, "", newUrl);
+      }
+    }
+  }, []);
+
   return (
-    <ProContext.Provider value={{ proStatus, unlock, lock, isCodeUsed }}>
+    <ProContext.Provider value={{ proStatus, unlock, unlockByPurchase, lock, isCodeUsed }}>
       {children}
     </ProContext.Provider>
   );
