@@ -1,10 +1,8 @@
 [{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "org.chinesename.app",
-    "sha256_cert_fingerprints": [
-      "04:63:2B:97:13:56:79:FE:A6:24:AE:52:92:26:4C:AF:4C:4A:B5:5C:8C:FC:9F:85:41:C5:9A:BF:BC:C3:25:ED"
-    ]
-  }
-}]
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "org.chinesename.app",
+        "sha256_cert_fingerprints": ["04:63:2B:97:13:56:79:FE:A6:24:AE:52:92:26:4C:AF:4C:4A:B5:5C:8C:FC:9F:85:41:C5:9A:BF:BC:C3:25:ED"]
+      }
+    }]
