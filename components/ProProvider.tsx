@@ -101,7 +101,7 @@ export function ProProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(PRO_STORAGE_KEY, JSON.stringify(newStatus));
   };
 
-  // Unlock Pro after successful Gumroad purchase
+  // Unlock Pro after successful purchase
   const unlockByPurchase = (email: string) => {
     const newStatus: ProStatus = {
       isPro: true,
@@ -112,13 +112,13 @@ export function ProProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(PRO_STORAGE_KEY, JSON.stringify(newStatus));
   };
 
-  // Check URL params for Gumroad redirect after payment
+  // Check URL params for payment redirect after purchase
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const purchased = params.get("purchased");
-      const email = params.get("email");
-      if (purchased === "true" && email) {
+      if (purchased === "true") {
+        const email = params.get("email") || "paypal";
         unlockByPurchase(email);
         // Clean URL
         const newUrl = window.location.pathname;

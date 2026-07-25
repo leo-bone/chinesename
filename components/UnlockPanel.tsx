@@ -80,7 +80,7 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
             <span className="text-sm font-medium text-amber-800">Unlock Pro Features</span>
           </div>
           <a
-            href="https://leobone.gumroad.com/l/chinesename-pro"
+            href="https://paypal.me/Leolau8/9.99USD"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -88,7 +88,7 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
               size="sm"
               className="bg-amber-600 hover:bg-amber-700 text-white"
             >
-              Unlock $9.99
+              Buy $9.99
             </Button>
           </a>
         </div>
@@ -141,9 +141,9 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
       </div>
 
       <div className="space-y-3" id="unlock-section">
-        {/* Gumroad Purchase Button */}
+        {/* PayPal Purchase Button */}
         <a
-          href="https://leobone.gumroad.com/l/chinesename-pro"
+          href="https://paypal.me/Leolau8/9.99USD"
           target="_blank"
           rel="noopener noreferrer"
           className="block"
@@ -190,9 +190,9 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
       </div>
 
       <p className="text-xs text-stone-500 text-center mt-4">
-        Purchase Pro access above to unlock all features instantly.
+        Pay $9.99 via PayPal to unlock all features instantly.
         <br />
-        <span className="text-stone-400">Already have a code? Enter it above to redeem.</span>
+        <span className="text-stone-400">After payment, enter the unlock code sent to your email.</span>
       </p>
     </div>
   );
