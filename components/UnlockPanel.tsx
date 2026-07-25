@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Crown, Lock, X, Check } from "lucide-react";
+import { Crown, Lock, X, Check, ExternalLink } from "lucide-react";
 import { usePro } from "./ProProvider";
 import { toast } from "sonner";
 
@@ -13,10 +13,23 @@ interface UnlockPanelProps {
 }
 
 export default function UnlockPanel({ onClose, compact = false }: UnlockPanelProps) {
-  const { proStatus, unlock, isCodeUsed } = usePro();
+  const { proStatus, unlock, unlockByPurchase, isCodeUsed } = usePro();
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [isUnlocking, setIsUnlocking] = useState(false);
+  const [showCodeInput, setShowCodeInput] = useState(false);
+
+  const PAYPAL_URL = "https://paypal.me/Leolau8/9.99USD";
+
+  const handleBuyClick = () => {
+    window.open(PAYPAL_URL, "_blank");
+    toast.info("Complete payment on PayPal, then come back and click 'Activate Pro'");
+  };
+
+  const handleActivate = () => {
+    unlockByPurchase("paypal");
+    toast.success("Pro features unlocked! Enjoy all premium features.");
+  };
 
   const handleUnlock = () => {
     if (!code.trim()) {
@@ -28,13 +41,12 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
     setError("");
 
     setTimeout(() => {
-      // Check if code was already used
       if (isCodeUsed(code)) {
         setError("This code has already been used. Each code can only be used once.");
         setIsUnlocking(false);
         return;
       }
-      
+
       const success = unlock(code);
       if (success) {
         toast.success("Pro features unlocked!");
@@ -62,7 +74,7 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
             </div>
             <div>
               <p className="font-semibold text-amber-800">Pro Unlocked</p>
-              <p className="text-sm text-amber-600">Code: {proStatus.unlockCode}</p>
+              <p className="text-sm text-amber-600">All features activated</p>
             </div>
           </div>
           <Check className="w-5 h-5 text-green-600" />
@@ -79,18 +91,13 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
             <Crown className="w-4 h-4 text-amber-600" />
             <span className="text-sm font-medium text-amber-800">Unlock Pro Features</span>
           </div>
-          <a
-            href="https://paypal.me/Leolau8/9.99USD"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Button
+            size="sm"
+            className="bg-amber-600 hover:bg-amber-700 text-white"
+            onClick={handleBuyClick}
           >
-            <Button
-              size="sm"
-              className="bg-amber-600 hover:bg-amber-700 text-white"
-            >
-              Buy $9.99
-            </Button>
-          </a>
+            Buy $9.99
+          </Button>
         </div>
       </div>
     );
@@ -141,59 +148,70 @@ export default function UnlockPanel({ onClose, compact = false }: UnlockPanelPro
       </div>
 
       <div className="space-y-3" id="unlock-section">
-        {/* PayPal Purchase Button */}
-        <a
-          href="https://paypal.me/Leolau8/9.99USD"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block"
+        {/* Step 1: Buy via PayPal */}
+        <Button
+          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-lg py-6"
+          onClick={handleBuyClick}
         >
-          <Button
-            className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-lg py-6"
-          >
-            <Crown className="w-5 h-5 mr-2" />
-            Buy Pro · $9.99
-          </Button>
-        </a>
+          <Crown className="w-5 h-5 mr-2" />
+          Buy Pro · $9.99
+        </Button>
+
+        {/* Step 2: Activate after payment */}
+        <Button
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4"
+          onClick={handleActivate}
+        >
+          <Check className="w-5 h-5 mr-2" />
+          I&apos;ve Paid - Activate Pro
+        </Button>
+
+        <p className="text-xs text-stone-500 text-center">
+          Click <strong>Buy Pro</strong> to pay $9.99 via PayPal,
+          then click <strong>Activate Pro</strong> to unlock all features instantly.
+        </p>
 
         {/* Divider */}
         <div className="flex items-center gap-3 py-2">
           <div className="flex-1 h-px bg-stone-200" />
-          <span className="text-xs text-stone-400">or use unlock code</span>
+          <button
+            className="text-xs text-stone-400 hover:text-stone-600"
+            onClick={() => setShowCodeInput(!showCodeInput)}
+          >
+            {showCodeInput ? "Hide code input" : "Have an unlock code?"}
+          </button>
           <div className="flex-1 h-px bg-stone-200" />
         </div>
 
-        {/* Unlock Code Input */}
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-          <Input
-            type="text"
-            placeholder="Enter unlock code"
-            value={code}
-            onChange={(e) => {
-              setCode(e.target.value.toUpperCase());
-              setError("");
-            }}
-            onKeyDown={handleKeyDown}
-            className="pl-10 border-stone-300 focus:border-amber-500"
-          />
-        </div>
-        {error && <p className="text-sm text-red-600 text-center">{error}</p>}
-        <Button
-          variant="outline"
-          className="w-full border-stone-300 text-stone-600 hover:bg-stone-50"
-          onClick={handleUnlock}
-          disabled={isUnlocking}
-        >
-          {isUnlocking ? "Unlocking..." : "Redeem Code"}
-        </Button>
+        {/* Unlock Code Input (optional) */}
+        {showCodeInput && (
+          <div className="space-y-3">
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+              <Input
+                type="text"
+                placeholder="Enter unlock code"
+                value={code}
+                onChange={(e) => {
+                  setCode(e.target.value.toUpperCase());
+                  setError("");
+                }}
+                onKeyDown={handleKeyDown}
+                className="pl-10 border-stone-300 focus:border-amber-500"
+              />
+            </div>
+            {error && <p className="text-sm text-red-600 text-center">{error}</p>}
+            <Button
+              variant="outline"
+              className="w-full border-stone-300 text-stone-600 hover:bg-stone-50"
+              onClick={handleUnlock}
+              disabled={isUnlocking}
+            >
+              {isUnlocking ? "Unlocking..." : "Redeem Code"}
+            </Button>
+          </div>
+        )}
       </div>
-
-      <p className="text-xs text-stone-500 text-center mt-4">
-        Pay $9.99 via PayPal to unlock all features instantly.
-        <br />
-        <span className="text-stone-400">After payment, enter the unlock code sent to your email.</span>
-      </p>
     </div>
   );
 }
