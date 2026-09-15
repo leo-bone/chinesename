@@ -1,6 +1,46 @@
 // Cloudflare Worker - API for Chinese Name Generator
 // Deployed as: chinesename-api
 
+// ─── 额度防护（公开接口 + 自付 DeepSeek 额度） ──────────────────────────────
+// 这个接口对外公开、无鉴权，任何人都能调，费用记在作者账上。加一层按 IP 的
+// 滑动窗口限流，挡住脚本批量刷。正常用户起名一分钟问不了 5 次。
+// 注意：Worker 跑在多个 isolate 上，计数不跨 isolate 共享，属于"削峰"而非硬限。
+const RATE_BUCKETS = [
+  { windowMs: 60_000, max: 5 },
+  { windowMs: 600_000, max: 15 },
+];
+const rateHits = new Map();
+const RATE_TTL_MS = 600_000;
+
+function clientIP(request) {
+  return (
+    request.headers.get('cf-connecting-ip') ||
+    (request.headers.get('x-forwarded-for') || '').split(',')[0].trim() ||
+    'unknown'
+  );
+}
+
+/** @returns null = 放行；否则返回被撞的那条规则 */
+function rateCheck(ip) {
+  const now = Date.now();
+  let arr = (rateHits.get(ip) || []).filter((t) => now - t < RATE_TTL_MS);
+  for (const b of RATE_BUCKETS) {
+    const inWindow = arr.filter((t) => now - t < b.windowMs);
+    if (inWindow.length >= b.max) {
+      rateHits.set(ip, arr);
+      return { ...b, oldest: inWindow[0] };
+    }
+  }
+  arr.push(now);
+  rateHits.set(ip, arr);
+  if (rateHits.size > 5000) {
+    for (const [k, v] of rateHits) {
+      if (!v.length || now - v[v.length - 1] > RATE_TTL_MS) rateHits.delete(k);
+    }
+  }
+  return null;
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -44,9 +84,34 @@ export default {
       });
     }
 
+    const ip = clientIP(request);
+    const limited = rateCheck(ip);
+    if (limited) {
+      const secs = Math.ceil((limited.windowMs - (Date.now() - limited.oldest)) / 1000);
+      return new Response(JSON.stringify({
+        error: '请求太频繁',
+        hint: `每个 IP 每 ${Math.round(limited.windowMs / 1000)} 秒最多 ${limited.max} 次，请 ${secs} 秒后重试。`,
+      }), {
+        status: 429,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': String(secs) }
+      });
+    }
+
     try {
-      const data = await request.json();
-      
+      const raw = (await request.json()) || {};
+      // 截断用户输入，防止有人塞长文本一次烧掉大量 token
+      const cut = (v) => (typeof v === 'string' ? v.slice(0, 500) : v);
+      const data = {
+        englishName: cut(raw.englishName),
+        gender: cut(raw.gender),
+        age: cut(raw.age),
+        personality: cut(raw.personality),
+        interests: cut(raw.interests),
+        profession: cut(raw.profession),
+        desiredMeaning: cut(raw.desiredMeaning),
+        more: Boolean(raw.more),
+      };
+
       // Validate API key
       const apiKey = env.DEEPSEEK_API_KEY;
       if (!apiKey) {
