@@ -1,5 +1,7 @@
 # Cloudflare Worker configuration for Chinese Name Generator API
-name = "chinesename-api"
+# ⚠️ 必须与线上 Custom Domain 绑定的 Worker 名一致！
+#    api.chinesename.uichain.org → Worker "chinesename"（不是 chinesename-api）
+name = "chinesename"
 main = "api/generate.js"
 compatibility_date = "2024-01-01"
 account_id = "72450e08e207045ce0dc313447dcb5e3"
