@@ -6,4 +6,9 @@ account_id = "72450e08e207045ce0dc313447dcb5e3"
 
 [vars]
 # Environment variables will be set via GitHub Actions secrets
-DEEPSEEK_API_KEY = "sk-f3a3cddb73e147949b42fd2747f3c082"
+# ⚠️ 密钥不要写进这个文件！它所在的仓库是公开的。
+# 正确做法：
+#   wrangler secret put DEEPSEEK_API_KEY
+# （或用 `wrangler deploy --var DEEPSEEK_API_KEY:...`，值从环境变量读）
+# 本地开发用 workers/.env.local（已在 .gitignore 里）
+# DEEPSEEK_API_KEY = "<removed>"
