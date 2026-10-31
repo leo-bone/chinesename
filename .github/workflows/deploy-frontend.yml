@@ -26,6 +26,9 @@ jobs:
         run: npm run build
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          # 构建 Next.js 收集 /api/generate 页面数据时会实例化 OpenAI 客户端，
+          # 缺少该环境变量会直接报 "Missing credentials" 导致构建失败
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
       - name: Install Wrangler
         run: npm install -g wrangler
